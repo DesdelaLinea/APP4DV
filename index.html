@@ -47,7 +47,7 @@
   .tagline{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chalk-dim);margin-top:4px;}
   .topbar .linea{margin-top:14px;}
 
-  #setup-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:32px;}
+  #setup-screen{display:none;position:fixed;inset:0;z-index:100;background:var(--field);min-height:100vh;align-items:center;justify-content:center;padding:32px;overflow-y:auto;}
   .setup-card{max-width:440px;background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:28px;}
   .setup-card h1{font-family:var(--font-d);font-size:24px;margin:0 0 6px;}
   .setup-card h3{font-family:var(--font-d);font-size:16px;margin:20px 0 6px;color:var(--disco);}
@@ -188,6 +188,7 @@
     <p>Esta versión usa autenticación real (no solo el navegador) para que los roles y permisos no se puedan falsificar. Ve a <code>Authentication → Sign-in method</code> y activa el proveedor <code>Anónimo</code>. No pide correo ni contraseña al jugador, solo genera una identidad segura por dispositivo.</p>
     <h3>Y sube las reglas de seguridad</h3>
     <p>Copia el archivo <code>firestore.rules</code> que te compartí junto a este HTML, y pégalo en <code>Firestore Database → Reglas</code> en la consola de Firebase. Sin esto, los permisos de club/red no se hacen cumplir de verdad.</p>
+    <p style="margin-top:18px;border-top:1px solid var(--linea);padding-top:14px;">Diagnóstico: valor detectado en <code>apiKey</code> → <code id="debug-apikey">—</code></p>
   </div>
 </div>
 
@@ -352,6 +353,7 @@ const NO_CONFIGURADO = firebaseConfig.apiKey.startsWith("PEGA_AQUI");
 
 if (NO_CONFIGURADO) {
   document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('debug-apikey').textContent = firebaseConfig.apiKey.slice(0, 14) + '…';
 } else {
   document.getElementById('loading-screen').style.display = 'flex';
   iniciarApp();
