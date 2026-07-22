@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F1F17">
+<title>Red · Desde La Línea</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --field:#0F1F17;
+    --field-2:#16281F;
+    --field-3:#1D362A;
+    --chalk:#EDEAE0;
+    --chalk-dim:#9FB0A6;
+    --disco:#FF6B35;
+    --disco-dim:rgba(255,107,53,.16);
+    --confianza:#2FA88C;
+    --confianza-dim:rgba(47,168,140,.16);
+    --oro:#E8B84B;
+    --oro-dim:rgba(232,184,75,.16);
+    --azul:#5B9BC7;
+    --azul-dim:rgba(91,155,199,.16);
+    --linea:rgba(237,234,224,.14);
+    --danger:#E5626A;
+    --radius:18px;
+    --font-d:'Anton',sans-serif;
+    --font-b:'Inter',sans-serif;
+    --font-m:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--field);
+    color:var(--chalk);
+    font-family:var(--font-b);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--confianza);outline-offset:2px;}
+  ::-webkit-scrollbar{display:none;}
+
+  .linea{
+    height:2px;
+    background-image:repeating-linear-gradient(90deg,var(--chalk-dim) 0 9px, transparent 9px 18px);
+    opacity:.45;
+  }
+
+  /* ---------- SHELL ---------- */
+  #shell{max-width:480px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:92px;}
+
+  .topbar{position:sticky;top:0;z-index:20;background:var(--field);padding:18px 20px 12px;}
+  .wordmark{font-family:var(--font-d);font-size:22px;letter-spacing:.5px;line-height:1;color:var(--chalk);}
+  .wordmark span{color:var(--disco);}
+  .tagline{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chalk-dim);margin-top:4px;}
+  .topbar .linea{margin-top:14px;}
+
+  /* ---------- SETUP SCREEN ---------- */
+  #setup-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:32px;}
+  .setup-card{max-width:440px;background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:28px;}
+  .setup-card h1{font-family:var(--font-d);font-size:26px;margin:0 0 6px;}
+  .setup-card p{color:var(--chalk-dim);font-size:14px;line-height:1.6;}
+  .setup-card ol{padding-left:20px;font-size:14px;line-height:1.9;color:var(--chalk);}
+  .setup-card code{background:var(--field-3);padding:2px 6px;border-radius:6px;font-family:var(--font-m);font-size:12px;color:var(--oro);}
+
+  /* ---------- ONBOARDING ---------- */
+  #onboarding{display:none;padding:28px 22px 40px;max-width:480px;margin:0 auto;}
+  .ob-step{display:none;}
+  .ob-step.active{display:block;animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .ob-eyebrow{font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--disco);}
+  .ob-title{font-family:var(--font-d);font-size:28px;margin:8px 0 4px;line-height:1.05;}
+  .ob-sub{color:var(--chalk-dim);font-size:14px;margin-bottom:22px;}
+
+  .field-group{margin-bottom:16px;}
+  label.field-label{display:block;font-size:12px;color:var(--chalk-dim);margin-bottom:6px;font-weight:600;}
+  .input, select, textarea.input{
+    width:100%;background:var(--field-3);border:1px solid var(--linea);color:var(--chalk);
+    padding:13px 14px;border-radius:12px;font-size:15px;
+  }
+  textarea.input{resize:vertical;min-height:80px;line-height:1.5;}
+  .input::placeholder{color:var(--chalk-dim);}
+
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    padding:9px 14px;border-radius:999px;border:1px solid var(--linea);background:var(--field-3);
+    color:var(--chalk-dim);font-size:13px;font-weight:600;transition:.15s;
+  }
+  .chip.active{background:var(--confianza-dim);border-color:var(--confianza);color:var(--confianza);}
+  .chip.active.disco{background:var(--disco-dim);border-color:var(--disco);color:var(--disco);}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 20px;border-radius:12px;border:none;font-weight:700;font-size:15px;width:100%;
+  }
+  .btn-primary{background:var(--disco);color:#1A0D06;}
+  .btn-primary:disabled{opacity:.4;}
+  .btn-ghost{background:transparent;border:1px solid var(--linea);color:var(--chalk);}
+  .btn-link{background:none;border:none;color:var(--confianza);font-weight:600;font-size:13px;padding:8px 0;width:auto;}
+
+  .club-search-results{margin-top:10px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+  .club-option{
+    display:flex;justify-content:space-between;align-items:center;padding:12px 14px;
+    background:var(--field-3);border:1px solid var(--linea);border-radius:12px;
+  }
+  .club-option:hover{border-color:var(--confianza);}
+  .club-option .cname{font-weight:700;font-size:14px;}
+  .club-option .cmeta{font-family:var(--font-m);font-size:11px;color:var(--chalk-dim);}
+  .club-option button{background:var(--confianza-dim);color:var(--confianza);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;}
+
+  .or-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--chalk-dim);font-size:11px;font-family:var(--font-m);text-transform:uppercase;letter-spacing:1px;}
+  .or-divider .line{flex:1;height:1px;background:var(--linea);}
+
+  /* ---------- MAIN APP ---------- */
+  #app{display:none;}
+  .view{display:none;padding:16px 20px 20px;}
+  .view.active{display:block;animation:fadeIn .25s ease;}
+
+  .filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
+  .filters .chip{white-space:nowrap;font-size:12px;padding:8px 13px;}
+
+  .scope-toggle{display:flex;background:var(--field-2);border-radius:12px;padding:4px;margin-bottom:16px;border:1px solid var(--linea);}
+  .scope-toggle button{flex:1;background:none;border:none;color:var(--chalk-dim);padding:10px;border-radius:9px;font-weight:700;font-size:13px;}
+  .scope-toggle button.active{background:var(--disco);color:#1A0D06;}
+
+  .card-op{background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+  .cat-chip{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border-radius:999px;font-weight:700;}
+  .scope-badge{font-family:var(--font-m);font-size:10px;color:var(--chalk-dim);white-space:nowrap;}
+  .card-op h3{font-size:16px;margin:6px 0 4px;line-height:1.3;}
+  .card-op p.desc{font-size:13.5px;color:var(--chalk-dim);line-height:1.5;margin:0 0 10px;}
+  .card-op .autor{font-size:12px;color:var(--chalk-dim);margin-bottom:8px;}
+  .card-op .autor b{color:var(--chalk);}
+  .contacto-box{background:var(--field-3);border-radius:10px;padding:9px 12px;font-family:var(--font-m);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .contacto-box .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .fecha{font-family:var(--font-m);font-size:10.5px;color:var(--chalk-dim);margin-top:8px;text-align:right;}
+
+  .empty-state{text-align:center;padding:50px 20px;color:var(--chalk-dim);}
+  .empty-state .emoji{font-size:34px;margin-bottom:10px;}
+  .empty-state p{font-size:14px;line-height:1.6;}
+
+  /* ---------- FAB (disco) ---------- */
+  #fab{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:82px;z-index:30;
+    width:58px;height:58px;border-radius:50%;border:none;
+    background:radial-gradient(circle at 32% 28%, #FF8A5C, var(--disco) 60%);
+    box-shadow:0 6px 20px rgba(255,107,53,.45);
+    display:flex;align-items:center;justify-content:center;font-size:26px;color:#1A0D06;
+    transition:transform .2s ease;
+  }
+  #fab:active{transform:translateX(-50%) rotate(25deg) scale(.96);}
+
+  /* ---------- BOTTOM NAV ---------- */
+  #bottomnav{
+    position:fixed;bottom:0;left:0;right:0;z-index:25;
+    background:var(--field-2);border-top:1px solid var(--linea);
+    display:flex;justify-content:center;
+  }
+  #bottomnav .nav-inner{max-width:480px;width:100%;display:flex;}
+  #bottomnav button{
+    flex:1;background:none;border:none;color:var(--chalk-dim);padding:12px 0 10px;
+    display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;
+    font-family:var(--font-m);text-transform:uppercase;letter-spacing:.5px;
+  }
+  #bottomnav button .ic{font-size:19px;}
+  #bottomnav button.active{color:var(--disco);}
+
+  /* ---------- MODAL / SHEET ---------- */
+  #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;}
+  #sheet{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:41;
+    max-width:480px;margin:0 auto;background:var(--field);
+    border-radius:22px 22px 0 0;border:1px solid var(--linea);border-bottom:none;
+    padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;
+  }
+  .sheet-handle{width:38px;height:4px;background:var(--linea);border-radius:99px;margin:0 auto 16px;}
+  .sheet-title{font-family:var(--font-d);font-size:22px;margin-bottom:16px;}
+  .toggle-two{display:flex;gap:8px;margin-bottom:16px;}
+  .toggle-two button{flex:1;padding:12px;border-radius:12px;border:1px solid var(--linea);background:var(--field-3);color:var(--chalk-dim);font-weight:700;font-size:13px;}
+  .toggle-two button.active{border-color:var(--confianza);background:var(--confianza-dim);color:var(--confianza);}
+  #cercano-fields{display:none;}
+
+  .club-profile-card{background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+  .club-profile-card h2{font-family:var(--font-d);font-size:24px;margin:0 0 4px;}
+  .club-profile-card .cmeta{font-family:var(--font-m);font-size:12px;color:var(--chalk-dim);}
+  .disc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+  .disc-tags span{font-size:11px;background:var(--field-3);padding:5px 10px;border-radius:999px;color:var(--chalk-dim);}
+
+  .perfil-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--linea);}
+  .perfil-row:last-child{border-bottom:none;}
+  .perfil-row .k{font-size:12px;color:var(--chalk-dim);}
+  .perfil-row .v{font-size:14px;font-weight:600;text-align:right;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PANTALLA DE CONFIGURACIÓN (si falta Firebase) ============ -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <h1>Falta conectar Firebase</h1>
+    <p>Este archivo necesita las credenciales de tu proyecto de Firebase para poder guardar clubes y oportunidades. Son los mismos pasos que ya usaste con el Predictor de WJUC:</p>
+    <ol>
+      <li>Entra a <code>console.firebase.google.com</code> y crea un proyecto (o usa uno existente).</li>
+      <li>Activa <b>Firestore Database</b> (modo producción o prueba).</li>
+      <li>Ve a Configuración del proyecto → General → "Tus apps" → crea una app web.</li>
+      <li>Copia el objeto <code>firebaseConfig</code> que te da Firebase.</li>
+      <li>Pégalo dentro de este archivo, reemplazando el bloque marcado <code>PEGA_AQUI_TU_...</code> cerca del final del archivo.</li>
+    </ol>
+    <p>Una vez pegado, guarda el archivo y ábrelo de nuevo.</p>
+  </div>
+</div>
+
+<!-- ============ SHELL PRINCIPAL ============ -->
+<div id="shell">
+
+  <div class="topbar">
+    <div class="wordmark">RED <span>·</span> DESDE LA LÍNEA</div>
+    <div class="tagline">comunidad de disco volador · latam</div>
+    <div class="linea"></div>
+  </div>
+
+  <!-- ============ ONBOARDING ============ -->
+  <div id="onboarding">
+
+    <!-- Paso 1: datos del jugador -->
+    <div class="ob-step active" id="ob-step-1">
+      <div class="ob-eyebrow">Paso 1 de 2</div>
+      <div class="ob-title">¿Quién eres?</div>
+      <div class="ob-sub">Esto es lo que va a ver tu comunidad cuando publiques algo.</div>
+
+      <div class="field-group">
+        <label class="field-label">Tu nombre</label>
+        <input class="input" id="ob-nombre" placeholder="Ej: Camila Restrepo" maxlength="60">
+      </div>
+      <div class="field-group">
+        <label class="field-label">País</label>
+        <select class="input" id="ob-pais"></select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Ciudad</label>
+        <input class="input" id="ob-ciudad" placeholder="Ej: Medellín" maxlength="60">
+      </div>
+      <div class="field-group">
+        <label class="field-label">¿Qué disciplina practicas?</label>
+        <div class="chip-row" id="ob-disciplina-chips"></div>
+      </div>
+
+      <button class="btn btn-primary" id="ob-go-step2" style="margin-top:8px;">Continuar</button>
+    </div>
+
+    <!-- Paso 2: club -->
+    <div class="ob-step" id="ob-step-2">
+      <div class="ob-eyebrow">Paso 2 de 2</div>
+      <div class="ob-title">¿Cuál es tu club?</div>
+      <div class="ob-sub">Búscalo en la red o créalo si es el primero en registrarse.</div>
+
+      <input class="input" id="ob-club-buscar" placeholder="Buscar club por nombre o ciudad…">
+      <div class="club-search-results" id="ob-club-resultados"></div>
+
+      <div class="or-divider"><div class="line"></div>O<div class="line"></div></div>
+
+      <button class="btn btn-ghost" id="ob-mostrar-crear-club">+ Crear un club nuevo</button>
+
+      <div id="ob-crear-club-form" style="display:none;margin-top:16px;">
+        <div class="field-group">
+          <label class="field-label">Nombre del club</label>
+          <input class="input" id="ob-nuevo-club-nombre" placeholder="Ej: Cóndores Ultimate">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Disciplinas que maneja el club</label>
+          <div class="chip-row" id="ob-nuevo-club-disciplinas"></div>
+        </div>
+        <button class="btn btn-primary" id="ob-crear-club-confirmar">Crear club y unirme</button>
+      </div>
+
+      <button class="btn-link" id="ob-back-step1">← Volver</button>
+    </div>
+  </div>
+
+  <!-- ============ APP PRINCIPAL ============ -->
+  <div id="app">
+
+    <!-- VISTA: DIRECTORIO (Red de Confianza) -->
+    <div class="view active" id="view-directorio">
+      <div class="scope-toggle">
+        <button class="active" data-scope="club">Mi club</button>
+        <button data-scope="red">Toda la red LATAM</button>
+      </div>
+      <div class="filters" id="filtros-categoria"></div>
+      <div id="feed-directorio"></div>
+    </div>
+
+    <!-- VISTA: MI CLUB -->
+    <div class="view" id="view-club">
+      <div class="club-profile-card">
+        <h2 id="club-nombre-display">—</h2>
+        <div class="cmeta" id="club-meta-display">—</div>
+        <div class="disc-tags" id="club-disc-tags"></div>
+      </div>
+      <button class="btn btn-ghost" id="btn-invitar" style="margin-bottom:20px;">Invitar a mi equipo</button>
+      <div class="ob-sub" style="margin-bottom:10px;">Publicado por miembros de tu club</div>
+      <div id="feed-club"></div>
+    </div>
+
+    <!-- VISTA: PERFIL -->
+    <div class="view" id="view-perfil">
+      <div class="club-profile-card">
+        <div class="perfil-row"><div class="k">Nombre</div><div class="v" id="pf-nombre">—</div></div>
+        <div class="perfil-row"><div class="k">Club</div><div class="v" id="pf-club">—</div></div>
+        <div class="perfil-row"><div class="k">País / Ciudad</div><div class="v" id="pf-ubicacion">—</div></div>
+        <div class="perfil-row"><div class="k">Disciplina</div><div class="v" id="pf-disciplina">—</div></div>
+      </div>
+      <button class="btn btn-ghost" id="btn-cambiar-club" style="margin-bottom:10px;">Cambiar de club</button>
+    </div>
+
+  </div>
+
+  <button id="fab" title="Publicar oportunidad">✚</button>
+
+  <div id="bottomnav">
+    <div class="nav-inner">
+      <button class="active" data-view="directorio"><span class="ic">🥏</span>Directorio</button>
+      <button data-view="club"><span class="ic">🏟️</span>Mi club</button>
+      <button data-view="perfil"><span class="ic">👤</span>Perfil</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ SHEET: PUBLICAR OPORTUNIDAD ============ -->
+<div id="overlay"></div>
+<div id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Publicar en la red</div>
+
+  <div class="field-group">
+    <label class="field-label">Categoría</label>
+    <div class="chip-row" id="pub-categoria-chips"></div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">¿Es tuya o de alguien cercano a ti?</label>
+    <div class="toggle-two">
+      <button class="active" data-quien="yo">Es mía</button>
+      <button data-quien="cercano">De alguien cercano</button>
+    </div>
+  </div>
+
+  <div id="cercano-fields">
+    <div class="field-group">
+      <label class="field-label">Nombre de la persona</label>
+      <input class="input" id="pub-cercano-nombre" placeholder="Ej: Andrés, mi hermano">
+    </div>
+    <div class="field-group">
+      <label class="field-label">¿Qué relación tiene contigo?</label>
+      <input class="input" id="pub-cercano-relacion" placeholder="Ej: hermano, prima, amigo cercano">
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Título</label>
+    <input class="input" id="pub-titulo" placeholder="Ej: Busco diseñador gráfico freelance" maxlength="80">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Descripción</label>
+    <textarea class="input" id="pub-descripcion" placeholder="Cuenta los detalles: qué se necesita, condiciones, para quién es útil…"></textarea>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Contacto</label>
+    <input class="input" id="pub-contacto" placeholder="Teléfono, correo o usuario de red social">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">¿Quién puede verla?</label>
+    <div class="toggle-two">
+      <button class="active" data-alcance="club">Solo mi club</button>
+      <button data-alcance="red">Toda la red LATAM</button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="pub-confirmar" style="margin-top:6px;">Publicar</button>
+  <button class="btn-link" id="pub-cancelar" style="width:100%;text-align:center;">Cancelar</button>
+</div>
+
+<script type="module">
+// ============================================================
+// CONFIGURA AQUÍ TU PROYECTO DE FIREBASE
+// (Firebase Console → Configuración del proyecto → Tus apps)
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM",
+  authDomain: "app4dv.firebaseapp.com",
+  projectId: "app4dv",
+  storageBucket: "app4dv.firebasestorage.app",
+  messagingSenderId: "703581570394",
+  appId: "1:703581570394:web:2dd9a5982841d227ebdf63"
+};
+
+const NO_CONFIGURADO = firebaseConfig.apiKey.startsWith("AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM");
+
+if (NO_CONFIGURADO) {
+  document.getElementById('setup-screen').style.display = 'flex';
+} else {
+  iniciarApp();
+}
+
+async function iniciarApp() {
+  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js");
+  const {
+    getFirestore, collection, addDoc, query, where, orderBy,
+    onSnapshot, serverTimestamp, limit
+  } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js");
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const COL_CLUBES = "red_dll_clubes";
+  const COL_OPORTUNIDADES = "red_dll_oportunidades";
+
+  // ---------- Datos de referencia ----------
+  const PAISES = ["Colombia","México","Argentina","Chile","Perú","Ecuador","Venezuela","Uruguay","Paraguay","Bolivia","Brasil","Costa Rica","Panamá","Guatemala","República Dominicana","Otro"];
+  const DISCIPLINAS = ["Ultimate","Disc Golf","Freestyle","Guts","Otro"];
+  const CATEGORIAS = [
+    { id:"empleo",    label:"Empleo",    emoji:"💼", bg:"var(--confianza-dim)", fg:"var(--confianza)" },
+    { id:"servicio",  label:"Servicio",  emoji:"🛠️", bg:"var(--disco-dim)",     fg:"var(--disco)" },
+    { id:"descuento", label:"Descuento", emoji:"🏷️", bg:"var(--oro-dim)",       fg:"var(--oro)" },
+    { id:"producto",  label:"Producto",  emoji:"📦", bg:"var(--azul-dim)",      fg:"var(--azul)" },
+  ];
+
+  // ---------- Identidad ligera (localStorage) ----------
+  function getUid() {
+    let uid = localStorage.getItem("redDLL_uid");
+    if (!uid) {
+      uid = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+      localStorage.setItem("redDLL_uid", uid);
+    }
+    return uid;
+  }
+  function getPerfil() {
+    const raw = localStorage.getItem("redDLL_perfil");
+    return raw ? JSON.parse(raw) : null;
+  }
+  function setPerfil(p) {
+    localStorage.setItem("redDLL_perfil", JSON.stringify(p));
+  }
+  function clearClubDePerfil() {
+    const p = getPerfil();
+    if (p) { p.clubId = null; p.clubNombre = null; setPerfil(p); }
+  }
+
+  const uid = getUid();
+
+  // ---------- Poblar selects estáticos ----------
+  const selPais = document.getElementById('ob-pais');
+  PAISES.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; selPais.appendChild(o); });
+
+  let disciplinaElegida = null;
+  const chipsDisciplina = document.getElementById('ob-disciplina-chips');
+  DISCIPLINAS.forEach(d => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.type = 'button'; b.textContent = d;
+    b.addEventListener('click', () => {
+      chipsDisciplina.querySelectorAll('.chip').forEach(c => c.classList.remove('active','disco'));
+      b.classList.add('active','disco'); disciplinaElegida = d;
+    });
+    chipsDisciplina.appendChild(b);
+  });
+
+  let disciplinasNuevoClub = new Set();
+  const chipsNuevoClub = document.getElementById('ob-nuevo-club-disciplinas');
+  DISCIPLINAS.forEach(d => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.type = 'button'; b.textContent = d;
+    b.addEventListener('click', () => {
+      b.classList.toggle('active'); b.classList.toggle('disco');
+      if (disciplinasNuevoClub.has(d)) disciplinasNuevoClub.delete(d); else disciplinasNuevoClub.add(d);
+    });
+    chipsNuevoClub.appendChild(b);
+  });
+
+  const catChipsPub = document.getElementById('pub-categoria-chips');
+  let categoriaElegida = CATEGORIAS[0].id;
+  function pintarCategoriaChips() {
+    catChipsPub.innerHTML = '';
+    CATEGORIAS.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (c.id === categoriaElegida ? ' active' : '');
+      b.type = 'button'; b.textContent = c.emoji + ' ' + c.label;
+      b.addEventListener('click', () => { categoriaElegida = c.id; pintarCategoriaChips(); });
+      catChipsPub.appendChild(b);
+    });
+  }
+  pintarCategoriaChips();
+
+  const catChipsFiltro = document.getElementById('filtros-categoria');
+  let categoriaFiltro = 'todas';
+  function pintarFiltroCategorias() {
+    catChipsFiltro.innerHTML = '';
+    const todas = document.createElement('button');
+    todas.className = 'chip' + (categoriaFiltro === 'todas' ? ' active' : '');
+    todas.textContent = 'Todas'; todas.type = 'button';
+    todas.addEventListener('click', () => { categoriaFiltro = 'todas'; pintarFiltroCategorias(); renderFeeds(); });
+    catChipsFiltro.appendChild(todas);
+    CATEGORIAS.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (categoriaFiltro === c.id ? ' active' : '');
+      b.type = 'button'; b.textContent = c.emoji + ' ' + c.label;
+      b.addEventListener('click', () => { categoriaFiltro = c.id; pintarFiltroCategorias(); renderFeeds(); });
+      catChipsFiltro.appendChild(b);
+    });
+  }
+  pintarFiltroCategorias();
+
+  // ---------- Onboarding: navegación entre pasos ----------
+  document.getElementById('ob-go-step2').addEventListener('click', () => {
+    const nombre = document.getElementById('ob-nombre').value.trim();
+    if (!nombre) { alert('Escribe tu nombre para continuar.'); return; }
+    if (!disciplinaElegida) { alert('Elige tu disciplina para continuar.'); return; }
+    document.getElementById('ob-step-1').classList.remove('active');
+    document.getElementById('ob-step-2').classList.add('active');
+    cargarClubesParaBuscar();
+  });
+  document.getElementById('ob-back-step1').addEventListener('click', () => {
+    document.getElementById('ob-step-2').classList.remove('active');
+    document.getElementById('ob-step-1').classList.add('active');
+  });
+
+  // ---------- Buscar / listar clubes en onboarding ----------
+  let clubesCache = [];
+  let unsubClubesOnboarding = null;
+  function cargarClubesParaBuscar() {
+    if (unsubClubesOnboarding) return;
+    const q = query(collection(db, COL_CLUBES), orderBy('nombre'));
+    unsubClubesOnboarding = onSnapshot(q, snap => {
+      clubesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      pintarResultadosClub(document.getElementById('ob-club-buscar').value);
+    });
+  }
+  function pintarResultadosClub(filtroTexto) {
+    const cont = document.getElementById('ob-club-resultados');
+    cont.innerHTML = '';
+    const f = (filtroTexto || '').toLowerCase();
+    const filtrados = clubesCache.filter(c =>
+      (c.nombre || '').toLowerCase().includes(f) || (c.ciudad || '').toLowerCase().includes(f)
+    );
+    if (filtrados.length === 0) {
+      cont.innerHTML = '<div class="ob-sub" style="margin:6px 0 0;">No encontramos ese club todavía. Puedes crearlo abajo.</div>';
+      return;
+    }
+    filtrados.slice(0, 20).forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'club-option';
+      row.innerHTML = `<div><div class="cname">${escapeHtml(c.nombre)}</div><div class="cmeta">${escapeHtml(c.ciudad||'')} · ${escapeHtml(c.pais||'')}</div></div>`;
+      const btn = document.createElement('button');
+      btn.textContent = 'Unirme';
+      btn.addEventListener('click', () => finalizarOnboarding(c.id, c.nombre));
+      row.appendChild(btn);
+      cont.appendChild(row);
+    });
+  }
+  document.getElementById('ob-club-buscar').addEventListener('input', e => pintarResultadosClub(e.target.value));
+
+  document.getElementById('ob-mostrar-crear-club').addEventListener('click', () => {
+    const f = document.getElementById('ob-crear-club-form');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  });
+
+  document.getElementById('ob-crear-club-confirmar').addEventListener('click', async () => {
+    const nombre = document.getElementById('ob-nuevo-club-nombre').value.trim();
+    if (!nombre) { alert('Escribe el nombre del club.'); return; }
+    const pais = document.getElementById('ob-pais').value;
+    const ciudad = document.getElementById('ob-ciudad').value.trim();
+    try {
+      const ref = await addDoc(collection(db, COL_CLUBES), {
+        nombre, pais, ciudad,
+        disciplinas: Array.from(disciplinasNuevoClub),
+        creadoPor: uid,
+        creadoEn: serverTimestamp()
+      });
+      finalizarOnboarding(ref.id, nombre);
+    } catch (e) {
+      alert('No se pudo crear el club. Revisa tu conexión o configuración de Firebase.');
+      console.error(e);
+    }
+  });
+
+  function finalizarOnboarding(clubId, clubNombre) {
+    const perfil = {
+      nombre: document.getElementById('ob-nombre').value.trim(),
+      pais: document.getElementById('ob-pais').value,
+      ciudad: document.getElementById('ob-ciudad').value.trim(),
+      disciplina: disciplinaElegida,
+      clubId, clubNombre
+    };
+    setPerfil(perfil);
+    mostrarAppPrincipal();
+  }
+
+  // ---------- Mostrar la pantalla correcta al cargar ----------
+  const perfilExistente = getPerfil();
+  if (perfilExistente && perfilExistente.clubId) {
+    mostrarAppPrincipal();
+  } else {
+    document.getElementById('onboarding').style.display = 'block';
+  }
+
+  function mostrarAppPrincipal() {
+    document.getElementById('onboarding').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    pintarPerfilYClub();
+    suscribirFeeds();
+  }
+
+  function pintarPerfilYClub() {
+    const p = getPerfil();
+    if (!p) return;
+    document.getElementById('pf-nombre').textContent = p.nombre || '—';
+    document.getElementById('pf-club').textContent = p.clubNombre || '—';
+    document.getElementById('pf-ubicacion').textContent = [p.ciudad, p.pais].filter(Boolean).join(', ') || '—';
+    document.getElementById('pf-disciplina').textContent = p.disciplina || '—';
+    document.getElementById('club-nombre-display').textContent = p.clubNombre || '—';
+    document.getElementById('club-meta-display').textContent = [p.ciudad, p.pais].filter(Boolean).join(' · ');
+    const club = clubesCache.find(c => c.id === p.clubId);
+    const tagsEl = document.getElementById('club-disc-tags');
+    tagsEl.innerHTML = '';
+    (club?.disciplinas || []).forEach(d => {
+      const s = document.createElement('span'); s.textContent = d; tagsEl.appendChild(s);
+    });
+  }
+
+  // ---------- Navegación inferior ----------
+  document.querySelectorAll('#bottomnav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#bottomnav button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+      if (btn.dataset.view === 'perfil' || btn.dataset.view === 'club') pintarPerfilYClub();
+    });
+  });
+
+  // ---------- Toggle Mi club / Toda la red ----------
+  let scopeActivo = 'club';
+  document.querySelectorAll('.scope-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.scope-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scopeActivo = btn.dataset.scope;
+      renderFeeds();
+    });
+  });
+
+  // ---------- Suscripción en tiempo real al directorio ----------
+  let oportunidadesMiClub = [];
+  let oportunidadesRed = [];
+
+  function suscribirFeeds() {
+    const p = getPerfil();
+    if (!p || !p.clubId) return;
+
+    const qClub = query(
+      collection(db, COL_OPORTUNIDADES),
+      where('clubId', '==', p.clubId),
+      orderBy('creadoEn', 'desc'),
+      limit(100)
+    );
+    onSnapshot(qClub, snap => {
+      oportunidadesMiClub = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderFeeds();
+    }, err => console.error('feed club:', err));
+
+    const qRed = query(
+      collection(db, COL_OPORTUNIDADES),
+      where('alcance', '==', 'red'),
+      orderBy('creadoEn', 'desc'),
+      limit(100)
+    );
+    onSnapshot(qRed, snap => {
+      oportunidadesRed = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderFeeds();
+    }, err => console.error('feed red:', err));
+  }
+
+  function renderFeeds() {
+    const lista = scopeActivo === 'club' ? oportunidadesMiClub : oportunidadesRed;
+    pintarFeed('feed-directorio', lista);
+    pintarFeed('feed-club', oportunidadesMiClub);
+  }
+
+  function pintarFeed(contenedorId, lista) {
+    const cont = document.getElementById(contenedorId);
+    const filtrada = categoriaFiltro === 'todas' ? lista : lista.filter(o => o.categoria === categoriaFiltro);
+    if (!filtrada.length) {
+      cont.innerHTML = `
+        <div class="empty-state">
+          <div class="emoji">🥏</div>
+          <p>Todavía no hay nada publicado aquí.<br>Sé el primero en compartir una oportunidad con tu comunidad.</p>
+        </div>`;
+      return;
+    }
+    cont.innerHTML = filtrada.map(o => tarjetaOportunidad(o)).join('');
+  }
+
+  function tarjetaOportunidad(o) {
+    const cat = CATEGORIAS.find(c => c.id === o.categoria) || CATEGORIAS[0];
+    const autorTxt = o.esParaCercano
+      ? `Publicado por <b>${escapeHtml(o.autorNombre)}</b> a nombre de <b>${escapeHtml(o.nombrePersona||'')}</b> (${escapeHtml(o.relacion||'')})`
+      : `Publicado por <b>${escapeHtml(o.autorNombre)}</b>`;
+    const scopeTxt = o.alcance === 'red' ? '🌎 Red LATAM' : '🏟️ ' + escapeHtml(o.clubNombre || 'Club');
+    return `
+      <div class="card-op">
+        <div class="card-top">
+          <span class="cat-chip" style="background:${cat.bg};color:${cat.fg};">${cat.emoji} ${cat.label}</span>
+          <span class="scope-badge">${scopeTxt}</span>
+        </div>
+        <h3>${escapeHtml(o.titulo)}</h3>
+        <p class="desc">${escapeHtml(o.descripcion)}</p>
+        <div class="autor">${autorTxt} · ${escapeHtml(o.clubNombre||'')}</div>
+        <div class="contacto-box"><span class="txt">${escapeHtml(o.contacto||'')}</span></div>
+        <div class="fecha">${formatearFecha(o.creadoEn)}</div>
+      </div>`;
+  }
+
+  function formatearFecha(ts) {
+    if (!ts || !ts.toDate) return 'justo ahora';
+    const diffMs = Date.now() - ts.toDate().getTime();
+    const min = Math.floor(diffMs / 60000);
+    if (min < 1) return 'justo ahora';
+    if (min < 60) return `hace ${min} min`;
+    const h = Math.floor(min / 60);
+    if (h < 24) return `hace ${h} h`;
+    const d = Math.floor(h / 24);
+    return `hace ${d} d`;
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+  }
+
+  // ---------- Sheet: publicar oportunidad ----------
+  const overlay = document.getElementById('overlay');
+  const sheet = document.getElementById('sheet');
+  function abrirSheet() { overlay.style.display = 'block'; sheet.style.display = 'block'; }
+  function cerrarSheet() { overlay.style.display = 'none'; sheet.style.display = 'none'; }
+  document.getElementById('fab').addEventListener('click', abrirSheet);
+  document.getElementById('pub-cancelar').addEventListener('click', cerrarSheet);
+  overlay.addEventListener('click', cerrarSheet);
+
+  let quienEsElegido = 'yo';
+  document.querySelectorAll('[data-quien]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-quien]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      quienEsElegido = btn.dataset.quien;
+      document.getElementById('cercano-fields').style.display = quienEsElegido === 'cercano' ? 'block' : 'none';
+    });
+  });
+
+  let alcanceElegido = 'club';
+  document.querySelectorAll('[data-alcance]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-alcance]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      alcanceElegido = btn.dataset.alcance;
+    });
+  });
+
+  document.getElementById('pub-confirmar').addEventListener('click', async () => {
+    const p = getPerfil();
+    const titulo = document.getElementById('pub-titulo').value.trim();
+    const descripcion = document.getElementById('pub-descripcion').value.trim();
+    const contacto = document.getElementById('pub-contacto').value.trim();
+    const nombrePersona = document.getElementById('pub-cercano-nombre').value.trim();
+    const relacion = document.getElementById('pub-cercano-relacion').value.trim();
+
+    if (!titulo || !descripcion || !contacto) { alert('Completa título, descripción y contacto.'); return; }
+    if (quienEsElegido === 'cercano' && (!nombrePersona || !relacion)) {
+      alert('Cuéntanos el nombre y la relación de la persona a la que representas.');
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, COL_OPORTUNIDADES), {
+        autorUid: uid,
+        autorNombre: p.nombre,
+        clubId: p.clubId,
+        clubNombre: p.clubNombre,
+        pais: p.pais,
+        categoria: categoriaElegida,
+        titulo, descripcion, contacto,
+        esParaCercano: quienEsElegido === 'cercano',
+        nombrePersona: quienEsElegido === 'cercano' ? nombrePersona : null,
+        relacion: quienEsElegido === 'cercano' ? relacion : null,
+        alcance: alcanceElegido,
+        estado: 'activa',
+        creadoEn: serverTimestamp()
+      });
+      // limpiar formulario
+      document.getElementById('pub-titulo').value = '';
+      document.getElementById('pub-descripcion').value = '';
+      document.getElementById('pub-contacto').value = '';
+      document.getElementById('pub-cercano-nombre').value = '';
+      document.getElementById('pub-cercano-relacion').value = '';
+      cerrarSheet();
+    } catch (e) {
+      alert('No se pudo publicar. Revisa tu conexión o configuración de Firebase.');
+      console.error(e);
+    }
+  });
+
+  // ---------- Mi club: invitar / cambiar de club ----------
+  document.getElementById('btn-invitar').addEventListener('click', async () => {
+    const p = getPerfil();
+    const texto = `Únete a la Red de Desde La Línea con nuestro club "${p.clubNombre}". Abre este link y regístrate: ${location.href}`;
+    if (navigator.share) {
+      try { await navigator.share({ text: texto }); } catch(e) {}
+    } else {
+      try { await navigator.clipboard.writeText(texto); alert('Copiado. Pégalo en tu grupo de WhatsApp o Instagram.'); }
+      catch(e) { alert(texto); }
+    }
+  });
+
+  document.getElementById('btn-cambiar-club').addEventListener('click', () => {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('onboarding').style.display = 'block';
+    document.getElementById('ob-step-1').classList.remove('active');
+    document.getElementById('ob-step-2').classList.add('active');
+    cargarClubesParaBuscar();
+  });
+}
+</script>
+</body>
+</html>
