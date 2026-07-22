@@ -32,42 +32,31 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background:var(--field);
-    color:var(--chalk);
-    font-family:var(--font-b);
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{background:var(--field);color:var(--chalk);font-family:var(--font-b);min-height:100vh;-webkit-font-smoothing:antialiased;}
   button{font-family:inherit;cursor:pointer;}
   input,select,textarea{font-family:inherit;}
   :focus-visible{outline:2px solid var(--confianza);outline-offset:2px;}
   ::-webkit-scrollbar{display:none;}
 
-  .linea{
-    height:2px;
-    background-image:repeating-linear-gradient(90deg,var(--chalk-dim) 0 9px, transparent 9px 18px);
-    opacity:.45;
-  }
+  .linea{height:2px;background-image:repeating-linear-gradient(90deg,var(--chalk-dim) 0 9px, transparent 9px 18px);opacity:.45;}
 
-  /* ---------- SHELL ---------- */
   #shell{max-width:480px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:92px;}
-
   .topbar{position:sticky;top:0;z-index:20;background:var(--field);padding:18px 20px 12px;}
   .wordmark{font-family:var(--font-d);font-size:22px;letter-spacing:.5px;line-height:1;color:var(--chalk);}
   .wordmark span{color:var(--disco);}
   .tagline{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chalk-dim);margin-top:4px;}
   .topbar .linea{margin-top:14px;}
 
-  /* ---------- SETUP SCREEN ---------- */
   #setup-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:32px;}
   .setup-card{max-width:440px;background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:28px;}
-  .setup-card h1{font-family:var(--font-d);font-size:26px;margin:0 0 6px;}
+  .setup-card h1{font-family:var(--font-d);font-size:24px;margin:0 0 6px;}
+  .setup-card h3{font-family:var(--font-d);font-size:16px;margin:20px 0 6px;color:var(--disco);}
   .setup-card p{color:var(--chalk-dim);font-size:14px;line-height:1.6;}
   .setup-card ol{padding-left:20px;font-size:14px;line-height:1.9;color:var(--chalk);}
   .setup-card code{background:var(--field-3);padding:2px 6px;border-radius:6px;font-family:var(--font-m);font-size:12px;color:var(--oro);}
 
-  /* ---------- ONBOARDING ---------- */
+  #loading-screen{display:none;min-height:100vh;align-items:center;justify-content:center;color:var(--chalk-dim);font-family:var(--font-m);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+
   #onboarding{display:none;padding:28px 22px 40px;max-width:480px;margin:0 auto;}
   .ob-step{display:none;}
   .ob-step.active{display:block;animation:fadeIn .3s ease;}
@@ -78,36 +67,23 @@
 
   .field-group{margin-bottom:16px;}
   label.field-label{display:block;font-size:12px;color:var(--chalk-dim);margin-bottom:6px;font-weight:600;}
-  .input, select, textarea.input{
-    width:100%;background:var(--field-3);border:1px solid var(--linea);color:var(--chalk);
-    padding:13px 14px;border-radius:12px;font-size:15px;
-  }
+  .input, select, textarea.input{width:100%;background:var(--field-3);border:1px solid var(--linea);color:var(--chalk);padding:13px 14px;border-radius:12px;font-size:15px;}
   textarea.input{resize:vertical;min-height:80px;line-height:1.5;}
   .input::placeholder{color:var(--chalk-dim);}
 
   .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
-  .chip{
-    padding:9px 14px;border-radius:999px;border:1px solid var(--linea);background:var(--field-3);
-    color:var(--chalk-dim);font-size:13px;font-weight:600;transition:.15s;
-  }
+  .chip{padding:9px 14px;border-radius:999px;border:1px solid var(--linea);background:var(--field-3);color:var(--chalk-dim);font-size:13px;font-weight:600;transition:.15s;}
   .chip.active{background:var(--confianza-dim);border-color:var(--confianza);color:var(--confianza);}
   .chip.active.disco{background:var(--disco-dim);border-color:var(--disco);color:var(--disco);}
 
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    padding:14px 20px;border-radius:12px;border:none;font-weight:700;font-size:15px;width:100%;
-  }
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:12px;border:none;font-weight:700;font-size:15px;width:100%;}
   .btn-primary{background:var(--disco);color:#1A0D06;}
   .btn-primary:disabled{opacity:.4;}
   .btn-ghost{background:transparent;border:1px solid var(--linea);color:var(--chalk);}
   .btn-link{background:none;border:none;color:var(--confianza);font-weight:600;font-size:13px;padding:8px 0;width:auto;}
 
   .club-search-results{margin-top:10px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
-  .club-option{
-    display:flex;justify-content:space-between;align-items:center;padding:12px 14px;
-    background:var(--field-3);border:1px solid var(--linea);border-radius:12px;
-  }
-  .club-option:hover{border-color:var(--confianza);}
+  .club-option{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--field-3);border:1px solid var(--linea);border-radius:12px;}
   .club-option .cname{font-weight:700;font-size:14px;}
   .club-option .cmeta{font-family:var(--font-m);font-size:11px;color:var(--chalk-dim);}
   .club-option button{background:var(--confianza-dim);color:var(--confianza);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;}
@@ -115,7 +91,11 @@
   .or-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--chalk-dim);font-size:11px;font-family:var(--font-m);text-transform:uppercase;letter-spacing:1px;}
   .or-divider .line{flex:1;height:1px;background:var(--linea);}
 
-  /* ---------- MAIN APP ---------- */
+  #join-panel{display:none;margin-top:16px;background:var(--field-2);border:1px solid var(--confianza);border-radius:14px;padding:16px;}
+  #join-panel .jp-title{font-weight:700;font-size:14px;margin-bottom:10px;}
+
+  .codigo-grande{font-family:var(--font-m);font-size:34px;letter-spacing:6px;text-align:center;background:var(--field-3);border:1px dashed var(--linea);border-radius:14px;padding:22px 10px;margin:18px 0;color:var(--oro);}
+
   #app{display:none;}
   .view{display:none;padding:16px 20px 20px;}
   .view.active{display:block;animation:fadeIn .25s ease;}
@@ -137,52 +117,33 @@
   .card-op .autor b{color:var(--chalk);}
   .contacto-box{background:var(--field-3);border-radius:10px;padding:9px 12px;font-family:var(--font-m);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
   .contacto-box .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .fecha{font-family:var(--font-m);font-size:10.5px;color:var(--chalk-dim);margin-top:8px;text-align:right;}
+  .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .fecha{font-family:var(--font-m);font-size:10.5px;color:var(--chalk-dim);}
+  .btn-eliminar-op{font-family:var(--font-m);font-size:10.5px;color:var(--danger);background:none;border:none;padding:0;}
 
   .empty-state{text-align:center;padding:50px 20px;color:var(--chalk-dim);}
   .empty-state .emoji{font-size:34px;margin-bottom:10px;}
   .empty-state p{font-size:14px;line-height:1.6;}
 
-  /* ---------- FAB (disco) ---------- */
-  #fab{
-    position:fixed;left:50%;transform:translateX(-50%);bottom:82px;z-index:30;
-    width:58px;height:58px;border-radius:50%;border:none;
-    background:radial-gradient(circle at 32% 28%, #FF8A5C, var(--disco) 60%);
-    box-shadow:0 6px 20px rgba(255,107,53,.45);
-    display:flex;align-items:center;justify-content:center;font-size:26px;color:#1A0D06;
-    transition:transform .2s ease;
-  }
+  #fab{position:fixed;left:50%;transform:translateX(-50%);bottom:82px;z-index:30;width:58px;height:58px;border-radius:50%;border:none;background:radial-gradient(circle at 32% 28%, #FF8A5C, var(--disco) 60%);box-shadow:0 6px 20px rgba(255,107,53,.45);display:flex;align-items:center;justify-content:center;font-size:26px;color:#1A0D06;transition:transform .2s ease;}
   #fab:active{transform:translateX(-50%) rotate(25deg) scale(.96);}
 
-  /* ---------- BOTTOM NAV ---------- */
-  #bottomnav{
-    position:fixed;bottom:0;left:0;right:0;z-index:25;
-    background:var(--field-2);border-top:1px solid var(--linea);
-    display:flex;justify-content:center;
-  }
+  #bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:25;background:var(--field-2);border-top:1px solid var(--linea);display:flex;justify-content:center;}
   #bottomnav .nav-inner{max-width:480px;width:100%;display:flex;}
-  #bottomnav button{
-    flex:1;background:none;border:none;color:var(--chalk-dim);padding:12px 0 10px;
-    display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;
-    font-family:var(--font-m);text-transform:uppercase;letter-spacing:.5px;
-  }
+  #bottomnav button{flex:1;background:none;border:none;color:var(--chalk-dim);padding:12px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;font-family:var(--font-m);text-transform:uppercase;letter-spacing:.5px;}
   #bottomnav button .ic{font-size:19px;}
   #bottomnav button.active{color:var(--disco);}
 
-  /* ---------- MODAL / SHEET ---------- */
   #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;}
-  #sheet{
-    display:none;position:fixed;left:0;right:0;bottom:0;z-index:41;
-    max-width:480px;margin:0 auto;background:var(--field);
-    border-radius:22px 22px 0 0;border:1px solid var(--linea);border-bottom:none;
-    padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;
-  }
+  #sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:480px;margin:0 auto;background:var(--field);border-radius:22px 22px 0 0;border:1px solid var(--linea);border-bottom:none;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;}
   .sheet-handle{width:38px;height:4px;background:var(--linea);border-radius:99px;margin:0 auto 16px;}
   .sheet-title{font-family:var(--font-d);font-size:22px;margin-bottom:16px;}
-  .toggle-two{display:flex;gap:8px;margin-bottom:16px;}
+  .toggle-two{display:flex;gap:8px;margin-bottom:8px;}
   .toggle-two button{flex:1;padding:12px;border-radius:12px;border:1px solid var(--linea);background:var(--field-3);color:var(--chalk-dim);font-weight:700;font-size:13px;}
   .toggle-two button.active{border-color:var(--confianza);background:var(--confianza-dim);color:var(--confianza);}
+  .toggle-two button.locked{opacity:.4;}
   #cercano-fields{display:none;}
+  .nota-permiso{display:none;font-size:12px;color:var(--oro);background:var(--oro-dim);padding:10px 12px;border-radius:10px;margin-bottom:16px;line-height:1.5;}
 
   .club-profile-card{background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
   .club-profile-card h2{font-family:var(--font-d);font-size:24px;margin:0 0 4px;}
@@ -190,105 +151,104 @@
   .disc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
   .disc-tags span{font-size:11px;background:var(--field-3);padding:5px 10px;border-radius:999px;color:var(--chalk-dim);}
 
+  #admin-codigo-box{display:none;background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:18px;margin-bottom:20px;}
+  #admin-codigo-box .cbh{font-size:12px;color:var(--chalk-dim);margin-bottom:4px;}
+  #admin-codigo-box .chelp{font-size:11.5px;color:var(--chalk-dim);margin:6px 0 12px;line-height:1.5;}
+
+  .miembros-titulo{font-weight:700;font-size:14px;margin:0 0 10px;}
+  .member-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--linea);gap:10px;}
+  .member-row:last-child{border-bottom:none;}
+  .mname{font-size:14px;font-weight:700;}
+  .mbadges{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
+  .role-badge{font-family:var(--font-m);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:999px;font-weight:700;white-space:nowrap;}
+  .macciones{display:flex;flex-direction:column;gap:2px;align-items:flex-end;}
+  .macciones button{font-size:11px;white-space:nowrap;}
+
   .perfil-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--linea);}
   .perfil-row:last-child{border-bottom:none;}
   .perfil-row .k{font-size:12px;color:var(--chalk-dim);}
   .perfil-row .v{font-size:14px;font-weight:600;text-align:right;}
 
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important;}
-  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
 
-<!-- ============ PANTALLA DE CONFIGURACIÓN (si falta Firebase) ============ -->
 <div id="setup-screen">
   <div class="setup-card">
     <h1>Falta conectar Firebase</h1>
-    <p>Este archivo necesita las credenciales de tu proyecto de Firebase para poder guardar clubes y oportunidades. Son los mismos pasos que ya usaste con el Predictor de WJUC:</p>
+    <p>Este archivo necesita las credenciales de tu proyecto de Firebase para poder guardar clubes, miembros y oportunidades.</p>
     <ol>
       <li>Entra a <code>console.firebase.google.com</code> y crea un proyecto (o usa uno existente).</li>
-      <li>Activa <b>Firestore Database</b> (modo producción o prueba).</li>
-      <li>Ve a Configuración del proyecto → General → "Tus apps" → crea una app web.</li>
-      <li>Copia el objeto <code>firebaseConfig</code> que te da Firebase.</li>
-      <li>Pégalo dentro de este archivo, reemplazando el bloque marcado <code>PEGA_AQUI_TU_...</code> cerca del final del archivo.</li>
+      <li>Activa <b>Firestore Database</b>.</li>
+      <li>Ve a Configuración del proyecto → General → "Tus apps" → crea una app web y copia el objeto <code>firebaseConfig</code>.</li>
+      <li>Pégalo dentro de este archivo, reemplazando el bloque <code>PEGA_AQUI_TU_...</code> cerca del final.</li>
     </ol>
-    <p>Una vez pegado, guarda el archivo y ábrelo de nuevo.</p>
+    <h3>Un paso nuevo: activar Autenticación Anónima</h3>
+    <p>Esta versión usa autenticación real (no solo el navegador) para que los roles y permisos no se puedan falsificar. Ve a <code>Authentication → Sign-in method</code> y activa el proveedor <code>Anónimo</code>. No pide correo ni contraseña al jugador, solo genera una identidad segura por dispositivo.</p>
+    <h3>Y sube las reglas de seguridad</h3>
+    <p>Copia el archivo <code>firestore.rules</code> que te compartí junto a este HTML, y pégalo en <code>Firestore Database → Reglas</code> en la consola de Firebase. Sin esto, los permisos de club/red no se hacen cumplir de verdad.</p>
   </div>
 </div>
 
-<!-- ============ SHELL PRINCIPAL ============ -->
-<div id="shell">
+<div id="loading-screen"><div>Conectando con la red…</div></div>
 
+<div id="shell">
   <div class="topbar">
     <div class="wordmark">RED <span>·</span> DESDE LA LÍNEA</div>
     <div class="tagline">comunidad de disco volador · latam</div>
     <div class="linea"></div>
   </div>
 
-  <!-- ============ ONBOARDING ============ -->
   <div id="onboarding">
-
-    <!-- Paso 1: datos del jugador -->
     <div class="ob-step active" id="ob-step-1">
-      <div class="ob-eyebrow">Paso 1 de 2</div>
+      <div class="ob-eyebrow">Paso 1 de 3</div>
       <div class="ob-title">¿Quién eres?</div>
       <div class="ob-sub">Esto es lo que va a ver tu comunidad cuando publiques algo.</div>
-
-      <div class="field-group">
-        <label class="field-label">Tu nombre</label>
-        <input class="input" id="ob-nombre" placeholder="Ej: Camila Restrepo" maxlength="60">
-      </div>
-      <div class="field-group">
-        <label class="field-label">País</label>
-        <select class="input" id="ob-pais"></select>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Ciudad</label>
-        <input class="input" id="ob-ciudad" placeholder="Ej: Medellín" maxlength="60">
-      </div>
-      <div class="field-group">
-        <label class="field-label">¿Qué disciplina practicas?</label>
-        <div class="chip-row" id="ob-disciplina-chips"></div>
-      </div>
-
+      <div class="field-group"><label class="field-label">Tu nombre</label><input class="input" id="ob-nombre" placeholder="Ej: Camila Restrepo" maxlength="60"></div>
+      <div class="field-group"><label class="field-label">País</label><select class="input" id="ob-pais"></select></div>
+      <div class="field-group"><label class="field-label">Ciudad</label><input class="input" id="ob-ciudad" placeholder="Ej: Medellín" maxlength="60"></div>
+      <div class="field-group"><label class="field-label">¿Qué disciplina practicas?</label><div class="chip-row" id="ob-disciplina-chips"></div></div>
       <button class="btn btn-primary" id="ob-go-step2" style="margin-top:8px;">Continuar</button>
     </div>
 
-    <!-- Paso 2: club -->
     <div class="ob-step" id="ob-step-2">
-      <div class="ob-eyebrow">Paso 2 de 2</div>
+      <div class="ob-eyebrow">Paso 2 de 3</div>
       <div class="ob-title">¿Cuál es tu club?</div>
-      <div class="ob-sub">Búscalo en la red o créalo si es el primero en registrarse.</div>
-
+      <div class="ob-sub">Búscalo y pide el código de invitación a tu admin, o créalo si eres el primero.</div>
       <input class="input" id="ob-club-buscar" placeholder="Buscar club por nombre o ciudad…">
       <div class="club-search-results" id="ob-club-resultados"></div>
 
-      <div class="or-divider"><div class="line"></div>O<div class="line"></div></div>
+      <div id="join-panel">
+        <div class="jp-title">Uniéndote a: <span id="join-club-nombre"></span></div>
+        <div class="field-group"><label class="field-label">Código de invitación</label><input class="input" id="join-codigo" placeholder="Ej: K7F3QA" maxlength="8"></div>
+        <button class="btn btn-primary" id="join-confirmar">Confirmar</button>
+        <button class="btn-link" id="join-cancelar" style="width:100%;text-align:center;">Cancelar</button>
+      </div>
 
+      <div class="or-divider"><div class="line"></div>O<div class="line"></div></div>
       <button class="btn btn-ghost" id="ob-mostrar-crear-club">+ Crear un club nuevo</button>
 
       <div id="ob-crear-club-form" style="display:none;margin-top:16px;">
-        <div class="field-group">
-          <label class="field-label">Nombre del club</label>
-          <input class="input" id="ob-nuevo-club-nombre" placeholder="Ej: Cóndores Ultimate">
-        </div>
-        <div class="field-group">
-          <label class="field-label">Disciplinas que maneja el club</label>
-          <div class="chip-row" id="ob-nuevo-club-disciplinas"></div>
-        </div>
-        <button class="btn btn-primary" id="ob-crear-club-confirmar">Crear club y unirme</button>
+        <div class="field-group"><label class="field-label">Nombre del club</label><input class="input" id="ob-nuevo-club-nombre" placeholder="Ej: Cóndores Ultimate"></div>
+        <div class="field-group"><label class="field-label">Disciplinas que maneja el club</label><div class="chip-row" id="ob-nuevo-club-disciplinas"></div></div>
+        <button class="btn btn-primary" id="ob-crear-club-confirmar">Crear club y ser su Admin</button>
       </div>
-
       <button class="btn-link" id="ob-back-step1">← Volver</button>
+    </div>
+
+    <div class="ob-step" id="ob-step-3">
+      <div class="ob-eyebrow">Paso 3 de 3</div>
+      <div class="ob-title">Tu club está listo</div>
+      <div class="ob-sub" id="ob-step3-club-nombre-sub"></div>
+      <div class="ob-sub">Comparte este código con tu equipo por WhatsApp. Solo quien lo tenga puede unirse. Podrás verlo y regenerarlo cuando quieras desde "Mi club".</div>
+      <div class="codigo-grande" id="codigo-generado-display">------</div>
+      <button class="btn btn-ghost" id="btn-copiar-codigo-onboarding" style="margin-bottom:12px;">Copiar código</button>
+      <button class="btn btn-primary" id="ob-continuar-final">Entrar a la app</button>
     </div>
   </div>
 
-  <!-- ============ APP PRINCIPAL ============ -->
   <div id="app">
-
-    <!-- VISTA: DIRECTORIO (Red de Confianza) -->
     <div class="view active" id="view-directorio">
       <div class="scope-toggle">
         <button class="active" data-scope="club">Mi club</button>
@@ -298,7 +258,6 @@
       <div id="feed-directorio"></div>
     </div>
 
-    <!-- VISTA: MI CLUB -->
     <div class="view" id="view-club">
       <div class="club-profile-card">
         <h2 id="club-nombre-display">—</h2>
@@ -306,21 +265,29 @@
         <div class="disc-tags" id="club-disc-tags"></div>
       </div>
       <button class="btn btn-ghost" id="btn-invitar" style="margin-bottom:20px;">Invitar a mi equipo</button>
-      <div class="ob-sub" style="margin-bottom:10px;">Publicado por miembros de tu club</div>
-      <div id="feed-club"></div>
+
+      <div id="admin-codigo-box">
+        <div class="cbh">Código de invitación de tu club</div>
+        <div class="contacto-box" style="margin-bottom:6px;"><span class="txt" id="codigo-actual-display">------</span><button class="btn-link" id="btn-copiar-codigo" style="width:auto;padding:0;">Copiar</button></div>
+        <div class="chelp">Compártelo solo con quien confíes. Si lo regeneras, el código anterior deja de servir (los que ya se unieron no se ven afectados).</div>
+        <button class="btn btn-ghost" id="btn-regenerar-codigo">Regenerar código</button>
+      </div>
+
+      <div class="miembros-titulo">Miembros de tu club</div>
+      <div id="miembros-lista"></div>
     </div>
 
-    <!-- VISTA: PERFIL -->
     <div class="view" id="view-perfil">
       <div class="club-profile-card">
         <div class="perfil-row"><div class="k">Nombre</div><div class="v" id="pf-nombre">—</div></div>
         <div class="perfil-row"><div class="k">Club</div><div class="v" id="pf-club">—</div></div>
         <div class="perfil-row"><div class="k">País / Ciudad</div><div class="v" id="pf-ubicacion">—</div></div>
         <div class="perfil-row"><div class="k">Disciplina</div><div class="v" id="pf-disciplina">—</div></div>
+        <div class="perfil-row"><div class="k">Tu rol</div><div class="v" id="pf-rol">—</div></div>
+        <div class="perfil-row"><div class="k">Tu alcance</div><div class="v" id="pf-alcance">—</div></div>
       </div>
-      <button class="btn btn-ghost" id="btn-cambiar-club" style="margin-bottom:10px;">Cambiar de club</button>
+      <button class="btn btn-ghost" id="btn-cambiar-club" style="margin-bottom:10px;">Unirme a otro club</button>
     </div>
-
   </div>
 
   <button id="fab" title="Publicar oportunidad">✚</button>
@@ -332,19 +299,14 @@
       <button data-view="perfil"><span class="ic">👤</span>Perfil</button>
     </div>
   </div>
-
 </div>
 
-<!-- ============ SHEET: PUBLICAR OPORTUNIDAD ============ -->
 <div id="overlay"></div>
 <div id="sheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title">Publicar en la red</div>
 
-  <div class="field-group">
-    <label class="field-label">Categoría</label>
-    <div class="chip-row" id="pub-categoria-chips"></div>
-  </div>
+  <div class="field-group"><label class="field-label">Categoría</label><div class="chip-row" id="pub-categoria-chips"></div></div>
 
   <div class="field-group">
     <label class="field-label">¿Es tuya o de alguien cercano a ti?</label>
@@ -355,30 +317,13 @@
   </div>
 
   <div id="cercano-fields">
-    <div class="field-group">
-      <label class="field-label">Nombre de la persona</label>
-      <input class="input" id="pub-cercano-nombre" placeholder="Ej: Andrés, mi hermano">
-    </div>
-    <div class="field-group">
-      <label class="field-label">¿Qué relación tiene contigo?</label>
-      <input class="input" id="pub-cercano-relacion" placeholder="Ej: hermano, prima, amigo cercano">
-    </div>
+    <div class="field-group"><label class="field-label">Nombre de la persona</label><input class="input" id="pub-cercano-nombre" placeholder="Ej: Andrés, mi hermano"></div>
+    <div class="field-group"><label class="field-label">¿Qué relación tiene contigo?</label><input class="input" id="pub-cercano-relacion" placeholder="Ej: hermano, prima, amigo cercano"></div>
   </div>
 
-  <div class="field-group">
-    <label class="field-label">Título</label>
-    <input class="input" id="pub-titulo" placeholder="Ej: Busco diseñador gráfico freelance" maxlength="80">
-  </div>
-
-  <div class="field-group">
-    <label class="field-label">Descripción</label>
-    <textarea class="input" id="pub-descripcion" placeholder="Cuenta los detalles: qué se necesita, condiciones, para quién es útil…"></textarea>
-  </div>
-
-  <div class="field-group">
-    <label class="field-label">Contacto</label>
-    <input class="input" id="pub-contacto" placeholder="Teléfono, correo o usuario de red social">
-  </div>
+  <div class="field-group"><label class="field-label">Título</label><input class="input" id="pub-titulo" placeholder="Ej: Busco diseñador gráfico freelance" maxlength="80"></div>
+  <div class="field-group"><label class="field-label">Descripción</label><textarea class="input" id="pub-descripcion" placeholder="Cuenta los detalles: qué se necesita, condiciones, para quién es útil…"></textarea></div>
+  <div class="field-group"><label class="field-label">Contacto</label><input class="input" id="pub-contacto" placeholder="Teléfono, correo o usuario de red social"></div>
 
   <div class="field-group">
     <label class="field-label">¿Quién puede verla?</label>
@@ -386,6 +331,7 @@
       <button class="active" data-alcance="club">Solo mi club</button>
       <button data-alcance="red">Toda la red LATAM</button>
     </div>
+    <div class="nota-permiso" id="alcance-nota">Tu club todavía no te ha dado alcance para publicar en toda la red. Pídele a un admin o capitán que te lo habilite desde "Mi club".</div>
   </div>
 
   <button class="btn btn-primary" id="pub-confirmar" style="margin-top:6px;">Publicar</button>
@@ -393,41 +339,41 @@
 </div>
 
 <script type="module">
-// ============================================================
-// CONFIGURA AQUÍ TU PROYECTO DE FIREBASE
-// (Firebase Console → Configuración del proyecto → Tus apps)
-// ============================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM",
-  authDomain: "app4dv.firebaseapp.com",
-  projectId: "app4dv",
-  storageBucket: "app4dv.firebasestorage.app",
-  messagingSenderId: "703581570394",
-  appId: "1:703581570394:web:2dd9a5982841d227ebdf63"
+  apiKey: "PEGA_AQUI_TU_API_KEY",
+  authDomain: "PEGA_AQUI_TU_AUTH_DOMAIN",
+  projectId: "PEGA_AQUI_TU_PROJECT_ID",
+  storageBucket: "PEGA_AQUI_TU_STORAGE_BUCKET",
+  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
+  appId: "PEGA_AQUI_TU_APP_ID"
 };
 
-const NO_CONFIGURADO = firebaseConfig.apiKey.startsWith("AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM");
+const NO_CONFIGURADO = firebaseConfig.apiKey.startsWith("PEGA_AQUI");
 
 if (NO_CONFIGURADO) {
   document.getElementById('setup-screen').style.display = 'flex';
 } else {
+  document.getElementById('loading-screen').style.display = 'flex';
   iniciarApp();
 }
 
 async function iniciarApp() {
   const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js");
   const {
-    getFirestore, collection, addDoc, query, where, orderBy,
-    onSnapshot, serverTimestamp, limit
+    getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc,
+    query, where, onSnapshot, serverTimestamp
   } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js");
+  const { getAuth, signInAnonymously, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js");
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   const COL_CLUBES = "red_dll_clubes";
+  const COL_CODIGOS = "red_dll_codigos";
+  const COL_MIEMBROS = "red_dll_miembros";
   const COL_OPORTUNIDADES = "red_dll_oportunidades";
 
-  // ---------- Datos de referencia ----------
   const PAISES = ["Colombia","México","Argentina","Chile","Perú","Ecuador","Venezuela","Uruguay","Paraguay","Bolivia","Brasil","Costa Rica","Panamá","Guatemala","República Dominicana","Otro"];
   const DISCIPLINAS = ["Ultimate","Disc Golf","Freestyle","Guts","Otro"];
   const CATEGORIAS = [
@@ -437,30 +383,46 @@ async function iniciarApp() {
     { id:"producto",  label:"Producto",  emoji:"📦", bg:"var(--azul-dim)",      fg:"var(--azul)" },
   ];
 
-  // ---------- Identidad ligera (localStorage) ----------
-  function getUid() {
-    let uid = localStorage.getItem("redDLL_uid");
-    if (!uid) {
-      uid = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
-      localStorage.setItem("redDLL_uid", uid);
-    }
-    return uid;
+  // ---------- Autenticación real (anónima) ----------
+  let uid = null;
+  await new Promise((resolve) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) { uid = user.uid; resolve(); }
+      else { signInAnonymously(auth).catch(e => { console.error('auth:', e); resolve(); }); }
+    });
+  });
+  document.getElementById('loading-screen').style.display = 'none';
+
+  function generarCodigo(len = 6) {
+    const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    let s = '';
+    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
   }
-  function getPerfil() {
-    const raw = localStorage.getItem("redDLL_perfil");
-    return raw ? JSON.parse(raw) : null;
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
   }
-  function setPerfil(p) {
-    localStorage.setItem("redDLL_perfil", JSON.stringify(p));
+  function porFechaDesc(a, b) {
+    const ta = a.creadoEn?.toMillis ? a.creadoEn.toMillis() : 0;
+    const tb = b.creadoEn?.toMillis ? b.creadoEn.toMillis() : 0;
+    return tb - ta;
   }
-  function clearClubDePerfil() {
-    const p = getPerfil();
-    if (p) { p.clubId = null; p.clubNombre = null; setPerfil(p); }
+  function formatearFecha(ts) {
+    if (!ts || !ts.toDate) return 'justo ahora';
+    const diffMs = Date.now() - ts.toDate().getTime();
+    const min = Math.floor(diffMs / 60000);
+    if (min < 1) return 'justo ahora';
+    if (min < 60) return `hace ${min} min`;
+    const h = Math.floor(min / 60);
+    if (h < 24) return `hace ${h} h`;
+    return `hace ${Math.floor(h / 24)} d`;
   }
 
-  const uid = getUid();
+  // ---------- Perfil local (solo datos de presentación, no identidad de seguridad) ----------
+  function getPerfil() { const raw = localStorage.getItem("redDLL_perfil"); return raw ? JSON.parse(raw) : null; }
+  function setPerfil(p) { localStorage.setItem("redDLL_perfil", JSON.stringify(p)); }
 
-  // ---------- Poblar selects estáticos ----------
+  // ---------- Selects / chips estáticos ----------
   const selPais = document.getElementById('ob-pais');
   PAISES.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; selPais.appendChild(o); });
 
@@ -521,7 +483,7 @@ async function iniciarApp() {
   }
   pintarFiltroCategorias();
 
-  // ---------- Onboarding: navegación entre pasos ----------
+  // ---------- Navegación onboarding ----------
   document.getElementById('ob-go-step2').addEventListener('click', () => {
     const nombre = document.getElementById('ob-nombre').value.trim();
     if (!nombre) { alert('Escribe tu nombre para continuar.'); return; }
@@ -535,14 +497,14 @@ async function iniciarApp() {
     document.getElementById('ob-step-1').classList.add('active');
   });
 
-  // ---------- Buscar / listar clubes en onboarding ----------
+  // ---------- Buscar clubes ----------
   let clubesCache = [];
   let unsubClubesOnboarding = null;
   function cargarClubesParaBuscar() {
     if (unsubClubesOnboarding) return;
-    const q = query(collection(db, COL_CLUBES), orderBy('nombre'));
+    const q = query(collection(db, COL_CLUBES));
     unsubClubesOnboarding = onSnapshot(q, snap => {
-      clubesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      clubesCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.nombre||'').localeCompare(b.nombre||''));
       pintarResultadosClub(document.getElementById('ob-club-buscar').value);
     });
   }
@@ -550,9 +512,7 @@ async function iniciarApp() {
     const cont = document.getElementById('ob-club-resultados');
     cont.innerHTML = '';
     const f = (filtroTexto || '').toLowerCase();
-    const filtrados = clubesCache.filter(c =>
-      (c.nombre || '').toLowerCase().includes(f) || (c.ciudad || '').toLowerCase().includes(f)
-    );
+    const filtrados = clubesCache.filter(c => (c.nombre||'').toLowerCase().includes(f) || (c.ciudad||'').toLowerCase().includes(f));
     if (filtrados.length === 0) {
       cont.innerHTML = '<div class="ob-sub" style="margin:6px 0 0;">No encontramos ese club todavía. Puedes crearlo abajo.</div>';
       return;
@@ -563,13 +523,47 @@ async function iniciarApp() {
       row.innerHTML = `<div><div class="cname">${escapeHtml(c.nombre)}</div><div class="cmeta">${escapeHtml(c.ciudad||'')} · ${escapeHtml(c.pais||'')}</div></div>`;
       const btn = document.createElement('button');
       btn.textContent = 'Unirme';
-      btn.addEventListener('click', () => finalizarOnboarding(c.id, c.nombre));
+      btn.addEventListener('click', () => abrirPanelUnirse(c.id, c.nombre));
       row.appendChild(btn);
       cont.appendChild(row);
     });
   }
   document.getElementById('ob-club-buscar').addEventListener('input', e => pintarResultadosClub(e.target.value));
 
+  // ---------- Panel de unirse con código ----------
+  let clubParaUnirse = null;
+  function abrirPanelUnirse(id, nombre) {
+    clubParaUnirse = { id, nombre };
+    document.getElementById('join-club-nombre').textContent = nombre;
+    document.getElementById('join-panel').style.display = 'block';
+  }
+  document.getElementById('join-cancelar').addEventListener('click', () => {
+    document.getElementById('join-panel').style.display = 'none';
+    clubParaUnirse = null;
+  });
+  document.getElementById('join-confirmar').addEventListener('click', async () => {
+    const codigo = document.getElementById('join-codigo').value.trim().toUpperCase();
+    if (!codigo) { alert('Ingresa el código de invitación.'); return; }
+    if (!clubParaUnirse) return;
+    const membershipRef = doc(db, COL_MIEMBROS, clubParaUnirse.id + '_' + uid);
+    try {
+      const existente = await getDoc(membershipRef);
+      if (existente.exists()) { finalizarOnboarding(clubParaUnirse.id, clubParaUnirse.nombre); return; }
+      await setDoc(membershipRef, {
+        clubId: clubParaUnirse.id, uid,
+        nombre: document.getElementById('ob-nombre').value.trim(),
+        rol: 'miembro', alcance: 'club',
+        codigoIngresado: codigo,
+        unidoEn: serverTimestamp()
+      });
+      finalizarOnboarding(clubParaUnirse.id, clubParaUnirse.nombre);
+    } catch (e) {
+      alert('Código incorrecto. Pide el código correcto a tu club.');
+      console.error(e);
+    }
+  });
+
+  // ---------- Crear club nuevo ----------
   document.getElementById('ob-mostrar-crear-club').addEventListener('click', () => {
     const f = document.getElementById('ob-crear-club-form');
     f.style.display = f.style.display === 'none' ? 'block' : 'none';
@@ -580,18 +574,42 @@ async function iniciarApp() {
     if (!nombre) { alert('Escribe el nombre del club.'); return; }
     const pais = document.getElementById('ob-pais').value;
     const ciudad = document.getElementById('ob-ciudad').value.trim();
+    const codigo = generarCodigo();
     try {
-      const ref = await addDoc(collection(db, COL_CLUBES), {
+      const clubRef = await addDoc(collection(db, COL_CLUBES), {
         nombre, pais, ciudad,
         disciplinas: Array.from(disciplinasNuevoClub),
         creadoPor: uid,
         creadoEn: serverTimestamp()
       });
-      finalizarOnboarding(ref.id, nombre);
+      await setDoc(doc(db, COL_CODIGOS, clubRef.id), { clubId: clubRef.id, codigo, actualizadoEn: serverTimestamp() });
+      await setDoc(doc(db, COL_MIEMBROS, clubRef.id + '_' + uid), {
+        clubId: clubRef.id, uid,
+        nombre: document.getElementById('ob-nombre').value.trim(),
+        rol: 'admin', alcance: 'red',
+        unidoEn: serverTimestamp()
+      });
+      mostrarCodigoGenerado(clubRef.id, nombre, codigo);
     } catch (e) {
       alert('No se pudo crear el club. Revisa tu conexión o configuración de Firebase.');
       console.error(e);
     }
+  });
+
+  let clubPendiente = null;
+  function mostrarCodigoGenerado(clubId, clubNombre, codigo) {
+    clubPendiente = { clubId, clubNombre };
+    document.getElementById('ob-step-2').classList.remove('active');
+    document.getElementById('ob-step-3').classList.add('active');
+    document.getElementById('ob-step3-club-nombre-sub').textContent = clubNombre;
+    document.getElementById('codigo-generado-display').textContent = codigo;
+  }
+  document.getElementById('btn-copiar-codigo-onboarding').addEventListener('click', async () => {
+    const c = document.getElementById('codigo-generado-display').textContent;
+    try { await navigator.clipboard.writeText(c); } catch(e) {}
+  });
+  document.getElementById('ob-continuar-final').addEventListener('click', () => {
+    finalizarOnboarding(clubPendiente.clubId, clubPendiente.clubNombre);
   });
 
   function finalizarOnboarding(clubId, clubNombre) {
@@ -606,7 +624,7 @@ async function iniciarApp() {
     mostrarAppPrincipal();
   }
 
-  // ---------- Mostrar la pantalla correcta al cargar ----------
+  // ---------- Arranque ----------
   const perfilExistente = getPerfil();
   if (perfilExistente && perfilExistente.clubId) {
     mostrarAppPrincipal();
@@ -617,11 +635,13 @@ async function iniciarApp() {
   function mostrarAppPrincipal() {
     document.getElementById('onboarding').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    pintarPerfilYClub();
+    pintarPerfilBasico();
+    suscribirMiMembresia();
     suscribirFeeds();
+    suscribirMiembros();
   }
 
-  function pintarPerfilYClub() {
+  function pintarPerfilBasico() {
     const p = getPerfil();
     if (!p) return;
     document.getElementById('pf-nombre').textContent = p.nombre || '—';
@@ -630,12 +650,127 @@ async function iniciarApp() {
     document.getElementById('pf-disciplina').textContent = p.disciplina || '—';
     document.getElementById('club-nombre-display').textContent = p.clubNombre || '—';
     document.getElementById('club-meta-display').textContent = [p.ciudad, p.pais].filter(Boolean).join(' · ');
-    const club = clubesCache.find(c => c.id === p.clubId);
-    const tagsEl = document.getElementById('club-disc-tags');
-    tagsEl.innerHTML = '';
-    (club?.disciplinas || []).forEach(d => {
-      const s = document.createElement('span'); s.textContent = d; tagsEl.appendChild(s);
-    });
+  }
+
+  // ---------- Mi membresía (rol / alcance en vivo) ----------
+  let miMembresiaActual = null;
+  let codigoSuscrito = false;
+  function suscribirMiMembresia() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    onSnapshot(doc(db, COL_MIEMBROS, p.clubId + '_' + uid), snap => {
+      miMembresiaActual = snap.exists() ? snap.data() : null;
+      pintarPerfilRolAlcance();
+      actualizarUISegunPermiso();
+      if (miMembresiaActual?.rol === 'admin' && !codigoSuscrito) { codigoSuscrito = true; suscribirCodigoAdmin(); }
+      const club = clubesCache.find(c => c.id === p.clubId);
+      const tagsEl = document.getElementById('club-disc-tags');
+      if (club) { tagsEl.innerHTML = ''; (club.disciplinas||[]).forEach(d => { const s=document.createElement('span'); s.textContent=d; tagsEl.appendChild(s); }); }
+    }, err => console.error('mi membresia:', err));
+  }
+
+  function pintarPerfilRolAlcance() {
+    const labelsRol = { admin:'Admin', capitan:'Capitán', miembro:'Miembro' };
+    document.getElementById('pf-rol').textContent = labelsRol[miMembresiaActual?.rol] || '—';
+    document.getElementById('pf-alcance').textContent = tengoAlcanceRed() ? '🌎 Toda la red LATAM' : '🏟️ Solo mi club';
+  }
+  function tengoAlcanceRed() {
+    return !!miMembresiaActual && (miMembresiaActual.alcance === 'red' || miMembresiaActual.rol === 'admin' || miMembresiaActual.rol === 'capitan');
+  }
+  function soyAdminOCapitan() {
+    return !!miMembresiaActual && (miMembresiaActual.rol === 'admin' || miMembresiaActual.rol === 'capitan');
+  }
+
+  function actualizarUISegunPermiso() {
+    const btnRed = document.querySelector('#sheet [data-alcance="red"]');
+    const nota = document.getElementById('alcance-nota');
+    const permitido = tengoAlcanceRed();
+    if (btnRed) { btnRed.disabled = !permitido; btnRed.classList.toggle('locked', !permitido); }
+    if (nota) nota.style.display = permitido ? 'none' : 'block';
+    pintarMiembros();
+  }
+
+  // ---------- Código de invitación (solo admin) ----------
+  function suscribirCodigoAdmin() {
+    const p = getPerfil();
+    onSnapshot(doc(db, COL_CODIGOS, p.clubId), snap => {
+      if (snap.exists()) {
+        document.getElementById('admin-codigo-box').style.display = 'block';
+        document.getElementById('codigo-actual-display').textContent = snap.data().codigo;
+      }
+    }, err => { document.getElementById('admin-codigo-box').style.display = 'none'; });
+  }
+  document.getElementById('btn-copiar-codigo').addEventListener('click', async () => {
+    const c = document.getElementById('codigo-actual-display').textContent;
+    try { await navigator.clipboard.writeText(c); alert('Código copiado.'); } catch(e) { alert(c); }
+  });
+  document.getElementById('btn-regenerar-codigo').addEventListener('click', async () => {
+    const p = getPerfil();
+    try { await updateDoc(doc(db, COL_CODIGOS, p.clubId), { codigo: generarCodigo(), actualizadoEn: serverTimestamp() }); }
+    catch(e) { alert('No se pudo regenerar el código.'); console.error(e); }
+  });
+
+  // ---------- Miembros del club ----------
+  let miembrosCache = [];
+  function suscribirMiembros() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    const q = query(collection(db, COL_MIEMBROS), where('clubId', '==', p.clubId));
+    onSnapshot(q, snap => {
+      const orden = { admin:0, capitan:1, miembro:2 };
+      miembrosCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a,b) => (orden[a.rol]??3) - (orden[b.rol]??3) || (a.nombre||'').localeCompare(b.nombre||''));
+      pintarMiembros();
+    }, err => console.error('miembros:', err));
+  }
+
+  function badgeRol(rol) {
+    const map = { admin:{l:'Admin',bg:'var(--disco-dim)',fg:'var(--disco)'}, capitan:{l:'Capitán',bg:'var(--oro-dim)',fg:'var(--oro)'}, miembro:{l:'Miembro',bg:'var(--field-3)',fg:'var(--chalk-dim)'} };
+    const c = map[rol] || map.miembro;
+    return `<span class="role-badge" style="background:${c.bg};color:${c.fg};">${c.l}</span>`;
+  }
+  function badgeAlcance(m) {
+    const red = m.alcance === 'red' || m.rol === 'admin' || m.rol === 'capitan';
+    return red ? `<span class="role-badge" style="background:var(--confianza-dim);color:var(--confianza);">🌎 Red</span>`
+               : `<span class="role-badge" style="background:var(--field-3);color:var(--chalk-dim);">🏟️ Club</span>`;
+  }
+
+  function pintarMiembros() {
+    const cont = document.getElementById('miembros-lista');
+    if (!cont) return;
+    const soyAdmin = miMembresiaActual?.rol === 'admin';
+    const puedoAlcance = soyAdminOCapitan();
+    cont.innerHTML = miembrosCache.map(m => {
+      const esYo = m.uid === uid;
+      let acciones = '';
+      if (!esYo && puedoAlcance && m.rol !== 'admin') {
+        const nuevoAlcance = (m.alcance === 'red') ? 'club' : 'red';
+        const texto = (m.alcance === 'red') ? 'Bajar a solo club' : 'Subir a Red LATAM';
+        acciones += `<button class="btn-link accion-alcance" data-id="${m.id}" data-nuevo="${nuevoAlcance}">${texto}</button>`;
+      }
+      if (!esYo && soyAdmin && m.rol !== 'admin') {
+        const nuevoRol = (m.rol === 'capitan') ? 'miembro' : 'capitan';
+        const texto = (m.rol === 'capitan') ? 'Quitar capitán' : 'Hacer capitán';
+        acciones += `<button class="btn-link accion-rol" data-id="${m.id}" data-nuevo="${nuevoRol}">${texto}</button>`;
+      }
+      return `
+        <div class="member-row">
+          <div><div class="mname">${escapeHtml(m.nombre)}${esYo ? ' (tú)' : ''}</div><div class="mbadges">${badgeRol(m.rol)}${badgeAlcance(m)}</div></div>
+          <div class="macciones">${acciones}</div>
+        </div>`;
+    }).join('') || '<div class="ob-sub">Aún no hay miembros registrados.</div>';
+
+    cont.querySelectorAll('.accion-alcance').forEach(b => b.addEventListener('click', () => cambiarAlcance(b.dataset.id, b.dataset.nuevo)));
+    cont.querySelectorAll('.accion-rol').forEach(b => b.addEventListener('click', () => cambiarRol(b.dataset.id, b.dataset.nuevo)));
+  }
+
+  async function cambiarAlcance(membershipDocId, nuevo) {
+    try { await updateDoc(doc(db, COL_MIEMBROS, membershipDocId), { alcance: nuevo }); }
+    catch(e) { alert('No tienes permiso para hacer ese cambio.'); console.error(e); }
+  }
+  async function cambiarRol(membershipDocId, nuevo) {
+    try { await updateDoc(doc(db, COL_MIEMBROS, membershipDocId), { rol: nuevo }); }
+    catch(e) { alert('No tienes permiso para hacer ese cambio.'); console.error(e); }
   }
 
   // ---------- Navegación inferior ----------
@@ -645,7 +780,6 @@ async function iniciarApp() {
       btn.classList.add('active');
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById('view-' + btn.dataset.view).classList.add('active');
-      if (btn.dataset.view === 'perfil' || btn.dataset.view === 'club') pintarPerfilYClub();
     });
   });
 
@@ -660,55 +794,40 @@ async function iniciarApp() {
     });
   });
 
-  // ---------- Suscripción en tiempo real al directorio ----------
+  // ---------- Feeds del directorio ----------
   let oportunidadesMiClub = [];
   let oportunidadesRed = [];
 
   function suscribirFeeds() {
     const p = getPerfil();
-    if (!p || !p.clubId) return;
+    if (!p?.clubId) return;
+    const qClub = query(collection(db, COL_OPORTUNIDADES), where('clubId', '==', p.clubId));
+    onSnapshot(qClub, snap => { oportunidadesMiClub = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(porFechaDesc); renderFeeds(); }, err => console.error('feed club:', err));
 
-    const qClub = query(
-      collection(db, COL_OPORTUNIDADES),
-      where('clubId', '==', p.clubId),
-      orderBy('creadoEn', 'desc'),
-      limit(100)
-    );
-    onSnapshot(qClub, snap => {
-      oportunidadesMiClub = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderFeeds();
-    }, err => console.error('feed club:', err));
-
-    const qRed = query(
-      collection(db, COL_OPORTUNIDADES),
-      where('alcance', '==', 'red'),
-      orderBy('creadoEn', 'desc'),
-      limit(100)
-    );
-    onSnapshot(qRed, snap => {
-      oportunidadesRed = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderFeeds();
-    }, err => console.error('feed red:', err));
+    const qRed = query(collection(db, COL_OPORTUNIDADES), where('alcance', '==', 'red'));
+    onSnapshot(qRed, snap => { oportunidadesRed = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(porFechaDesc); renderFeeds(); }, err => console.error('feed red:', err));
   }
 
   function renderFeeds() {
-    const lista = scopeActivo === 'club' ? oportunidadesMiClub : oportunidadesRed;
-    pintarFeed('feed-directorio', lista);
-    pintarFeed('feed-club', oportunidadesMiClub);
+    pintarFeed('feed-directorio', scopeActivo === 'club' ? oportunidadesMiClub : oportunidadesRed);
+  }
+
+  function puedeEliminar(o) {
+    const p = getPerfil();
+    if (o.autorUid === uid) return true;
+    if (o.clubId === p?.clubId && soyAdminOCapitan()) return true;
+    return false;
   }
 
   function pintarFeed(contenedorId, lista) {
     const cont = document.getElementById(contenedorId);
     const filtrada = categoriaFiltro === 'todas' ? lista : lista.filter(o => o.categoria === categoriaFiltro);
     if (!filtrada.length) {
-      cont.innerHTML = `
-        <div class="empty-state">
-          <div class="emoji">🥏</div>
-          <p>Todavía no hay nada publicado aquí.<br>Sé el primero en compartir una oportunidad con tu comunidad.</p>
-        </div>`;
+      cont.innerHTML = `<div class="empty-state"><div class="emoji">🥏</div><p>Todavía no hay nada publicado aquí.<br>Sé el primero en compartir una oportunidad con tu comunidad.</p></div>`;
       return;
     }
     cont.innerHTML = filtrada.map(o => tarjetaOportunidad(o)).join('');
+    cont.querySelectorAll('.btn-eliminar-op').forEach(b => b.addEventListener('click', () => eliminarOportunidad(b.dataset.id)));
   }
 
   function tarjetaOportunidad(o) {
@@ -717,40 +836,34 @@ async function iniciarApp() {
       ? `Publicado por <b>${escapeHtml(o.autorNombre)}</b> a nombre de <b>${escapeHtml(o.nombrePersona||'')}</b> (${escapeHtml(o.relacion||'')})`
       : `Publicado por <b>${escapeHtml(o.autorNombre)}</b>`;
     const scopeTxt = o.alcance === 'red' ? '🌎 Red LATAM' : '🏟️ ' + escapeHtml(o.clubNombre || 'Club');
+    const eliminarBtn = puedeEliminar(o) ? `<button class="btn-eliminar-op" data-id="${o.id}">Eliminar</button>` : '<span></span>';
     return `
       <div class="card-op">
-        <div class="card-top">
-          <span class="cat-chip" style="background:${cat.bg};color:${cat.fg};">${cat.emoji} ${cat.label}</span>
-          <span class="scope-badge">${scopeTxt}</span>
-        </div>
+        <div class="card-top"><span class="cat-chip" style="background:${cat.bg};color:${cat.fg};">${cat.emoji} ${cat.label}</span><span class="scope-badge">${scopeTxt}</span></div>
         <h3>${escapeHtml(o.titulo)}</h3>
         <p class="desc">${escapeHtml(o.descripcion)}</p>
         <div class="autor">${autorTxt} · ${escapeHtml(o.clubNombre||'')}</div>
         <div class="contacto-box"><span class="txt">${escapeHtml(o.contacto||'')}</span></div>
-        <div class="fecha">${formatearFecha(o.creadoEn)}</div>
+        <div class="card-footer">${eliminarBtn}<span class="fecha">${formatearFecha(o.creadoEn)}</span></div>
       </div>`;
   }
 
-  function formatearFecha(ts) {
-    if (!ts || !ts.toDate) return 'justo ahora';
-    const diffMs = Date.now() - ts.toDate().getTime();
-    const min = Math.floor(diffMs / 60000);
-    if (min < 1) return 'justo ahora';
-    if (min < 60) return `hace ${min} min`;
-    const h = Math.floor(min / 60);
-    if (h < 24) return `hace ${h} h`;
-    const d = Math.floor(h / 24);
-    return `hace ${d} d`;
-  }
-
-  function escapeHtml(s) {
-    return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+  async function eliminarOportunidad(opId) {
+    if (!confirm('¿Eliminar esta publicación?')) return;
+    try { await deleteDoc(doc(db, COL_OPORTUNIDADES, opId)); }
+    catch(e) { alert('No se pudo eliminar.'); console.error(e); }
   }
 
   // ---------- Sheet: publicar oportunidad ----------
   const overlay = document.getElementById('overlay');
   const sheet = document.getElementById('sheet');
-  function abrirSheet() { overlay.style.display = 'block'; sheet.style.display = 'block'; }
+  function abrirSheet() {
+    quienEsElegido = 'yo'; alcanceElegido = 'club';
+    document.querySelectorAll('[data-quien]').forEach(b => b.classList.toggle('active', b.dataset.quien==='yo'));
+    document.querySelectorAll('[data-alcance]').forEach(b => b.classList.toggle('active', b.dataset.alcance==='club'));
+    document.getElementById('cercano-fields').style.display = 'none';
+    overlay.style.display = 'block'; sheet.style.display = 'block';
+  }
   function cerrarSheet() { overlay.style.display = 'none'; sheet.style.display = 'none'; }
   document.getElementById('fab').addEventListener('click', abrirSheet);
   document.getElementById('pub-cancelar').addEventListener('click', cerrarSheet);
@@ -769,6 +882,7 @@ async function iniciarApp() {
   let alcanceElegido = 'club';
   document.querySelectorAll('[data-alcance]').forEach(btn => {
     btn.addEventListener('click', () => {
+      if (btn.dataset.alcance === 'red' && !tengoAlcanceRed()) return;
       document.querySelectorAll('[data-alcance]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       alcanceElegido = btn.dataset.alcance;
@@ -784,10 +898,7 @@ async function iniciarApp() {
     const relacion = document.getElementById('pub-cercano-relacion').value.trim();
 
     if (!titulo || !descripcion || !contacto) { alert('Completa título, descripción y contacto.'); return; }
-    if (quienEsElegido === 'cercano' && (!nombrePersona || !relacion)) {
-      alert('Cuéntanos el nombre y la relación de la persona a la que representas.');
-      return;
-    }
+    if (quienEsElegido === 'cercano' && (!nombrePersona || !relacion)) { alert('Cuéntanos el nombre y la relación de la persona a la que representas.'); return; }
 
     try {
       await addDoc(collection(db, COL_OPORTUNIDADES), {
@@ -805,7 +916,6 @@ async function iniciarApp() {
         estado: 'activa',
         creadoEn: serverTimestamp()
       });
-      // limpiar formulario
       document.getElementById('pub-titulo').value = '';
       document.getElementById('pub-descripcion').value = '';
       document.getElementById('pub-contacto').value = '';
@@ -813,21 +923,17 @@ async function iniciarApp() {
       document.getElementById('pub-cercano-relacion').value = '';
       cerrarSheet();
     } catch (e) {
-      alert('No se pudo publicar. Revisa tu conexión o configuración de Firebase.');
+      alert('No se pudo publicar. Revisa tu conexión, tu configuración de Firebase o si tienes el alcance necesario.');
       console.error(e);
     }
   });
 
-  // ---------- Mi club: invitar / cambiar de club ----------
+  // ---------- Mi club: invitar / unirse a otro club ----------
   document.getElementById('btn-invitar').addEventListener('click', async () => {
     const p = getPerfil();
-    const texto = `Únete a la Red de Desde La Línea con nuestro club "${p.clubNombre}". Abre este link y regístrate: ${location.href}`;
-    if (navigator.share) {
-      try { await navigator.share({ text: texto }); } catch(e) {}
-    } else {
-      try { await navigator.clipboard.writeText(texto); alert('Copiado. Pégalo en tu grupo de WhatsApp o Instagram.'); }
-      catch(e) { alert(texto); }
-    }
+    const texto = `Únete a la Red de Desde La Línea con nuestro club "${p.clubNombre}". Abre este link, regístrate y pide el código de invitación: ${location.href}`;
+    if (navigator.share) { try { await navigator.share({ text: texto }); } catch(e) {} }
+    else { try { await navigator.clipboard.writeText(texto); alert('Copiado. Pégalo en tu grupo de WhatsApp o Instagram.'); } catch(e) { alert(texto); } }
   });
 
   document.getElementById('btn-cambiar-club').addEventListener('click', () => {
