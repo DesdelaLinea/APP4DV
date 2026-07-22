@@ -350,7 +350,7 @@ const firebaseConfig = {
 };
 
 const CAMPOS_CONFIG = ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
-const CAMPOS_SIN_CONFIGURAR = CAMPOS_CONFIG.filter(k => String(firebaseConfig[k] || '').startsWith('AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM'));
+const CAMPOS_SIN_CONFIGURAR = CAMPOS_CONFIG.filter(k => String(firebaseConfig[k] || '').startsWith('PEGA_AQUI'));
 const NO_CONFIGURADO = CAMPOS_SIN_CONFIGURAR.length > 0;
 
 if (NO_CONFIGURADO) {
