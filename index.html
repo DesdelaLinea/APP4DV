@@ -240,6 +240,15 @@
       <div class="ob-eyebrow">Paso 1 de 3</div>
       <div class="ob-title">¿Quién eres?</div>
       <div class="ob-sub">Esto es lo que va a ver tu comunidad cuando publiques algo.</div>
+
+      <button class="btn-link" id="btn-mostrar-login">¿Ya tienes una cuenta asegurada? Inicia sesión con tu correo</button>
+      <div id="login-panel" style="display:none;margin-bottom:16px;background:var(--field-2);border:1px solid var(--confianza);border-radius:14px;padding:16px;">
+        <div class="field-group"><label class="field-label">Correo</label><input class="input" type="email" id="login-email" placeholder="tucorreo@ejemplo.com"></div>
+        <div class="field-group"><label class="field-label">Contraseña</label><input class="input" type="password" id="login-password" placeholder="Tu contraseña"></div>
+        <button class="btn btn-primary" id="login-confirmar">Iniciar sesión</button>
+        <button class="btn-link" id="login-cancelar" style="width:100%;text-align:center;">Cancelar</button>
+      </div>
+
       <div class="field-group"><label class="field-label">Tu nombre</label><input class="input" id="ob-nombre" placeholder="Ej: Camila Restrepo" maxlength="60"></div>
       <div class="field-group"><label class="field-label">País</label><select class="input" id="ob-pais"></select></div>
       <div class="field-group"><label class="field-label">Ciudad</label><input class="input" id="ob-ciudad" placeholder="Ej: Medellín" maxlength="60"></div>
@@ -361,6 +370,17 @@
         <div class="perfil-row"><div class="k">Tu alcance</div><div class="v" id="pf-alcance">—</div></div>
         <div class="perfil-row"><div class="k">Tu ID de dispositivo</div><div class="v" id="pf-uid" style="font-family:var(--font-m);font-size:10.5px;">—</div></div>
       </div>
+
+      <div class="club-profile-card" id="seguridad-cuenta-box">
+        <div class="miembros-titulo">Seguridad de tu cuenta</div>
+        <div id="seguridad-estado" class="ob-sub" style="margin-bottom:10px;">Si cambias de celular o borras los datos del navegador, puedes perder el acceso a tu cuenta. Asegúrala con un correo y contraseña para poder recuperarla.</div>
+        <div id="seguridad-form">
+          <div class="field-group"><label class="field-label">Correo</label><input class="input" type="email" id="sec-email" placeholder="tucorreo@ejemplo.com"></div>
+          <div class="field-group"><label class="field-label">Contraseña (mínimo 6 caracteres)</label><input class="input" type="password" id="sec-password" placeholder="Crea una contraseña"></div>
+          <button class="btn btn-primary" id="sec-guardar">Asegurar mi cuenta</button>
+        </div>
+      </div>
+
       <button class="btn btn-ghost" id="btn-cambiar-club" style="margin-bottom:10px;">Unirme a otro club</button>
     </div>
   </div>
@@ -441,12 +461,12 @@
 
 <script type="module">
 const firebaseConfig = {
-  apiKey: "AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM",
-  authDomain: "app4dv.firebaseapp.com",
-  projectId: "app4dv",
-  storageBucket: "app4dv.firebasestorage.app",
-  messagingSenderId: "703581570394",
-  appId: "1:703581570394:web:2dd9a5982841d227ebdf63"
+  apiKey: "PEGA_AQUI_TU_API_KEY",
+  authDomain: "PEGA_AQUI_TU_AUTH_DOMAIN",
+  projectId: "PEGA_AQUI_TU_PROJECT_ID",
+  storageBucket: "PEGA_AQUI_TU_STORAGE_BUCKET",
+  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
+  appId: "PEGA_AQUI_TU_APP_ID"
 };
 
 const CAMPOS_CONFIG = ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
@@ -467,7 +487,10 @@ async function iniciarApp() {
     getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, deleteDoc,
     query, where, onSnapshot, serverTimestamp
   } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js");
-  const { getAuth, signInAnonymously, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js");
+  const {
+    getAuth, signInAnonymously, onAuthStateChanged,
+    EmailAuthProvider, linkWithCredential, signInWithEmailAndPassword
+  } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js");
   const { getStorage, ref: storageRef, uploadBytes, getDownloadURL } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js");
 
   const app = initializeApp(firebaseConfig);
@@ -480,6 +503,7 @@ async function iniciarApp() {
   const COL_MIEMBROS = "red_dll_miembros";
   const COL_OPORTUNIDADES = "red_dll_oportunidades";
   const COL_SUPERADMINS = "red_dll_superadmins";
+  const COL_PERFILES = "red_dll_perfiles";
   const COL_RUTINAS = "red_dll_rutinas";
   const COL_ENTREGAS = "red_dll_entregas";
   const COL_EVENTOS = "red_dll_eventos";
@@ -648,6 +672,33 @@ async function iniciarApp() {
     document.getElementById('ob-step-1').classList.add('active');
   });
 
+  // ---------- Iniciar sesión con correo (recuperar cuenta en un dispositivo nuevo) ----------
+  document.getElementById('btn-mostrar-login').addEventListener('click', () => {
+    document.getElementById('login-panel').style.display = 'block';
+  });
+  document.getElementById('login-cancelar').addEventListener('click', () => {
+    document.getElementById('login-panel').style.display = 'none';
+  });
+  document.getElementById('login-confirmar').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) { alert('Escribe tu correo y tu contraseña.'); return; }
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      uid = cred.user.uid;
+      const perfilSnap = await getDoc(doc(db, COL_PERFILES, uid));
+      if (perfilSnap.exists()) {
+        setPerfil(perfilSnap.data());
+        mostrarAppPrincipal();
+      } else {
+        alert('Iniciaste sesión, pero no encontramos un perfil guardado con esta cuenta.');
+      }
+    } catch (e) {
+      alert('No se pudo iniciar sesión. Revisa tu correo y tu contraseña.');
+      console.error(e);
+    }
+  });
+
   // ---------- Buscar clubes ----------
   let clubesCache = [];
   let unsubClubesOnboarding = null;
@@ -765,7 +816,7 @@ async function iniciarApp() {
     finalizarOnboarding(clubPendiente.clubId, clubPendiente.clubNombre);
   });
 
-  function finalizarOnboarding(clubId, clubNombre) {
+  async function finalizarOnboarding(clubId, clubNombre) {
     const perfil = {
       nombre: document.getElementById('ob-nombre').value.trim(),
       pais: document.getElementById('ob-pais').value,
@@ -775,10 +826,18 @@ async function iniciarApp() {
       clubId, clubNombre
     };
     setPerfil(perfil);
+    try { await setDoc(doc(db, COL_PERFILES, uid), { ...perfil, actualizadoEn: serverTimestamp() }); }
+    catch (e) { console.error('guardar perfil remoto:', e); }
     mostrarAppPrincipal();
   }
 
   // ---------- Arranque ----------
+  if (!getPerfil()) {
+    try {
+      const perfilRemoto = await getDoc(doc(db, COL_PERFILES, uid));
+      if (perfilRemoto.exists()) setPerfil(perfilRemoto.data());
+    } catch (e) { console.error('perfil remoto:', e); }
+  }
   const perfilExistente = getPerfil();
   if (perfilExistente && perfilExistente.clubId) {
     mostrarAppPrincipal();
@@ -839,7 +898,43 @@ async function iniciarApp() {
     document.getElementById('club-nombre-display').textContent = p.clubNombre || '—';
     document.getElementById('club-meta-display').textContent = [p.ciudad, p.pais].filter(Boolean).join(' · ');
     document.getElementById('pf-uid').textContent = uid;
+    pintarEstadoSeguridad();
   }
+
+  function pintarEstadoSeguridad() {
+    const proveedores = auth.currentUser?.providerData || [];
+    const emailProv = proveedores.find(pr => pr.providerId === 'password');
+    if (emailProv) {
+      document.getElementById('seguridad-estado').textContent = `✅ Tu cuenta está protegida con: ${emailProv.email}`;
+      document.getElementById('seguridad-form').style.display = 'none';
+    }
+  }
+
+  document.getElementById('sec-guardar').addEventListener('click', async () => {
+    const email = document.getElementById('sec-email').value.trim();
+    const password = document.getElementById('sec-password').value;
+    if (!email || !password) { alert('Escribe un correo y una contraseña.'); return; }
+    if (password.length < 6) { alert('La contraseña debe tener al menos 6 caracteres.'); return; }
+    try {
+      const credential = EmailAuthProvider.credential(email, password);
+      await linkWithCredential(auth.currentUser, credential);
+      const p = getPerfil();
+      await setDoc(doc(db, COL_PERFILES, uid), { ...p, actualizadoEn: serverTimestamp() });
+      pintarEstadoSeguridad();
+      alert('¡Listo! Tu cuenta ya está asegurada con tu correo.');
+    } catch (e) {
+      if (e.code === 'auth/email-already-in-use') {
+        alert('Ese correo ya está en uso por otra cuenta. Si es tuya, usa "Ya tienes una cuenta asegurada, inicia sesión" en el registro, en vez de crear una nueva.');
+      } else if (e.code === 'auth/weak-password') {
+        alert('Elige una contraseña más segura (mínimo 6 caracteres).');
+      } else if (e.code === 'auth/invalid-email') {
+        alert('Ese correo no parece válido.');
+      } else {
+        alert('No se pudo asegurar la cuenta. Intenta de nuevo.');
+      }
+      console.error(e);
+    }
+  });
 
   // ---------- Mi membresía (rol / alcance en vivo) ----------
   let miMembresiaActual = null;
@@ -1010,6 +1105,9 @@ async function iniciarApp() {
         const texto = (m.rol === 'capitan') ? 'Quitar capitán' : 'Hacer capitán';
         acciones += `<button class="btn-link accion-rol" data-id="${m.id}" data-nuevo="${nuevoRol}">${texto}</button>`;
       }
+      if (!esYo && soyAdmin && m.rol !== 'admin') {
+        acciones += `<button class="btn-link accion-quitar" data-id="${m.id}" data-nombre="${escapeHtml(m.nombre)}" style="color:var(--danger);">Quitar del club</button>`;
+      }
       return `
         <div class="member-row">
           <div><div class="mname">${escapeHtml(m.nombre)}${esYo ? ' (tú)' : ''}</div><div class="mbadges">${badgeRol(m.rol)}${badgeAlcance(m)}</div><div class="ob-sub" style="margin:4px 0 0;font-size:11px;">${actividadDe(m)}</div></div>
@@ -1019,6 +1117,13 @@ async function iniciarApp() {
 
     cont.querySelectorAll('.accion-alcance').forEach(b => b.addEventListener('click', () => cambiarAlcance(b.dataset.id, b.dataset.nuevo)));
     cont.querySelectorAll('.accion-rol').forEach(b => b.addEventListener('click', () => cambiarRol(b.dataset.id, b.dataset.nuevo)));
+    cont.querySelectorAll('.accion-quitar').forEach(b => b.addEventListener('click', () => quitarMiembro(b.dataset.id, b.dataset.nombre)));
+  }
+
+  async function quitarMiembro(membershipDocId, nombre) {
+    if (!confirm(`¿Quitar a ${nombre} del club? Esto es útil si tiene una cuenta duplicada. Puede volver a unirse con el código de invitación.`)) return;
+    try { await deleteDoc(doc(db, COL_MIEMBROS, membershipDocId)); }
+    catch(e) { alert('No se pudo quitar. Solo el admin puede hacerlo.'); console.error(e); }
   }
 
   async function cambiarAlcance(membershipDocId, nuevo) {
