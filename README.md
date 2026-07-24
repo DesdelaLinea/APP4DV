@@ -89,10 +89,10 @@ Si falta algún campo de configuración, la propia app lo detecta y muestra una 
 
 ## Sobre Desde La Línea
 
-RED es un proyecto de **Desde La Línea**, plataforma de organización de eventos, transmisión (UltiStats) y herramientas digitales para la comunidad de disco volador en Latinoamérica — con base en Medellín, Colombia.
+RED DISCO VOLADOR es un proyecto de **Desde La Línea**, plataforma de organización de eventos, transmisión (UltiStats) y herramientas digitales para la comunidad de disco volador en Latinoamérica — con base en Medellín, Colombia.
 
 ---
 
 ## Contacto
 
-¿Preguntas, ideas o quieres sumar a tu club a la red? Escríbenos a **desdelalinea@gmail.com**.
+¿Preguntas, ideas o quieres sumar a tu club a la red? Escríbenos a **desdelalinea.tv@gmail.com**.
