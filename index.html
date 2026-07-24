@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0F1F17">
-<title>APP Disco Volador · Desde La Línea</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Red DLL">
+<title>Red · Desde La Línea</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -33,21 +37,21 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{background:var(--field);color:var(--chalk);font-family:var(--font-b);min-height:100vh;-webkit-font-smoothing:antialiased;}
-  button{font-family:inherit;cursor:pointer;}
+  button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
   input,select,textarea{font-family:inherit;}
   :focus-visible{outline:2px solid var(--confianza);outline-offset:2px;}
   ::-webkit-scrollbar{display:none;}
 
   .linea{height:2px;background-image:repeating-linear-gradient(90deg,var(--chalk-dim) 0 9px, transparent 9px 18px);opacity:.45;}
 
-  #shell{max-width:480px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:92px;}
+  #shell{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;padding-bottom:calc(92px + env(safe-area-inset-bottom));}
   .topbar{position:sticky;top:0;z-index:20;background:var(--field);padding:18px 20px 12px;}
   .wordmark{font-family:var(--font-d);font-size:22px;letter-spacing:.5px;line-height:1;color:var(--chalk);}
   .wordmark span{color:var(--disco);}
   .tagline{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--chalk-dim);margin-top:4px;}
   .topbar .linea{margin-top:14px;}
 
-  #setup-screen{display:none;position:fixed;inset:0;z-index:100;background:var(--field);min-height:100vh;align-items:center;justify-content:center;padding:32px;overflow-y:auto;}
+  #setup-screen{display:none;position:fixed;inset:0;z-index:100;background:var(--field);min-height:100vh;min-height:100dvh;align-items:center;justify-content:center;padding:32px;overflow-y:auto;}
   .setup-card{max-width:440px;background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:28px;}
   .setup-card h1{font-family:var(--font-d);font-size:24px;margin:0 0 6px;}
   .setup-card h3{font-family:var(--font-d);font-size:16px;margin:20px 0 6px;color:var(--disco);}
@@ -55,7 +59,7 @@
   .setup-card ol{padding-left:20px;font-size:14px;line-height:1.9;color:var(--chalk);}
   .setup-card code{background:var(--field-3);padding:2px 6px;border-radius:6px;font-family:var(--font-m);font-size:12px;color:var(--oro);}
 
-  #loading-screen{display:none;min-height:100vh;align-items:center;justify-content:center;color:var(--chalk-dim);font-family:var(--font-m);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+  #loading-screen{display:none;min-height:100vh;min-height:100dvh;align-items:center;justify-content:center;color:var(--chalk-dim);font-family:var(--font-m);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
 
   #onboarding{display:none;padding:28px 22px 40px;max-width:480px;margin:0 auto;}
   .ob-step{display:none;}
@@ -67,7 +71,7 @@
 
   .field-group{margin-bottom:16px;}
   label.field-label{display:block;font-size:12px;color:var(--chalk-dim);margin-bottom:6px;font-weight:600;}
-  .input, select, textarea.input{width:100%;background:var(--field-3);border:1px solid var(--linea);color:var(--chalk);padding:13px 14px;border-radius:12px;font-size:15px;}
+  .input, select, textarea.input{width:100%;background:var(--field-3);border:1px solid var(--linea);color:var(--chalk);padding:13px 14px;border-radius:12px;font-size:16px;}
   textarea.input{resize:vertical;min-height:80px;line-height:1.5;}
   .input::placeholder{color:var(--chalk-dim);}
 
@@ -100,42 +104,69 @@
   .view{display:none;padding:16px 20px 20px;}
   .view.active{display:block;animation:fadeIn .25s ease;}
 
-  .filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
-  .filters .chip{white-space:nowrap;font-size:12px;padding:8px 13px;}
+  .filters{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px 14px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);}
+  .filters .chip{white-space:nowrap;font-size:12px;padding:8px 13px;flex:0 0 auto;}
+  .check-expiradas{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--chalk-dim);margin-bottom:14px;}
+  .check-expiradas input{accent-color:var(--disco);width:15px;height:15px;}
 
   .scope-toggle{display:flex;background:var(--field-2);border-radius:12px;padding:4px;margin-bottom:16px;border:1px solid var(--linea);}
-  .scope-toggle button{flex:1;background:none;border:none;color:var(--chalk-dim);padding:10px;border-radius:9px;font-weight:700;font-size:13px;}
+  .scope-toggle button{flex:1;background:none;border:none;color:var(--chalk-dim);padding:10px 4px;border-radius:9px;font-weight:700;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .scope-toggle button.active{background:var(--disco);color:#1A0D06;}
 
-  .card-op{background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+  .card-op{background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+  .card-header{cursor:pointer;}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
   .cat-chip{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border-radius:999px;font-weight:700;}
   .scope-badge{font-family:var(--font-m);font-size:10px;color:var(--chalk-dim);white-space:nowrap;}
-  .card-op h3{font-size:16px;margin:6px 0 4px;line-height:1.3;}
+  .card-op h3{font-size:15.5px;margin:6px 0 2px;line-height:1.3;padding-right:22px;}
+  .card-summary{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .card-summary-meta{font-family:var(--font-m);font-size:10.5px;color:var(--chalk-dim);display:flex;gap:8px;flex-wrap:wrap;}
+  .card-summary-meta .expira-pronto{color:var(--oro);}
+  .card-summary-meta .expirada{color:var(--danger);}
+  .chevron{font-size:11px;color:var(--chalk-dim);transition:transform .2s;flex-shrink:0;}
+  .card-op.expandida .chevron{transform:rotate(180deg);}
+  .card-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--linea);}
+  .card-op.expandida .card-body{display:block;animation:fadeIn .2s ease;}
   .card-op p.desc{font-size:13.5px;color:var(--chalk-dim);line-height:1.5;margin:0 0 10px;}
   .card-op .autor{font-size:12px;color:var(--chalk-dim);margin-bottom:8px;}
   .card-op .autor b{color:var(--chalk);}
-  .contacto-box{background:var(--field-3);border-radius:10px;padding:9px 12px;font-family:var(--font-m);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .contacto-box{background:var(--field-3);border-radius:10px;padding:9px 12px;font-family:var(--font-m);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
   .contacto-box .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .card-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .card-footer-links{display:flex;gap:14px;}
   .fecha{font-family:var(--font-m);font-size:10.5px;color:var(--chalk-dim);}
-  .btn-eliminar-op{font-family:var(--font-m);font-size:10.5px;color:var(--danger);background:none;border:none;padding:0;}
+  .btn-eliminar-op, .btn-compartir-op, .btn-destacar-op{font-family:var(--font-m);font-size:10.5px;background:none;border:none;padding:0;}
+  .btn-eliminar-op{color:var(--danger);}
+  .btn-compartir-op{color:var(--confianza);}
+  .btn-destacar-op{color:var(--oro);}
+  .btn-destacar-op.quitar{color:var(--chalk-dim);}
+
+  .card-op.destacada{border-color:var(--oro);box-shadow:0 0 0 1px var(--oro-dim);}
+  .destacado-tag{color:var(--oro);font-weight:700;}
+
+  .mi-entrega-estado{font-size:13px;font-weight:700;margin-bottom:6px;}
+  .comentario-capitan{font-size:12.5px;color:var(--chalk-dim);background:var(--field-3);border-radius:10px;padding:9px 12px;margin:8px 0;font-style:italic;}
+  .panel-capitan{margin-top:16px;padding-top:14px;border-top:1px solid var(--linea);}
+  .mi-seccion{margin-bottom:6px;}
+  .subiendo-nota{font-family:var(--font-m);font-size:11px;color:var(--oro);margin-top:6px;}
 
   .empty-state{text-align:center;padding:50px 20px;color:var(--chalk-dim);}
   .empty-state .emoji{font-size:34px;margin-bottom:10px;}
   .empty-state p{font-size:14px;line-height:1.6;}
 
-  #fab{position:fixed;left:50%;transform:translateX(-50%);bottom:82px;z-index:30;width:58px;height:58px;border-radius:50%;border:none;background:radial-gradient(circle at 32% 28%, #FF8A5C, var(--disco) 60%);box-shadow:0 6px 20px rgba(255,107,53,.45);display:flex;align-items:center;justify-content:center;font-size:26px;color:#1A0D06;transition:transform .2s ease;}
+  #fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(82px + env(safe-area-inset-bottom));z-index:30;width:58px;height:58px;border-radius:50%;border:none;background:radial-gradient(circle at 32% 28%, #FF8A5C, var(--disco) 60%);box-shadow:0 6px 20px rgba(255,107,53,.45);display:flex;align-items:center;justify-content:center;font-size:26px;color:#1A0D06;transition:transform .2s ease;}
   #fab:active{transform:translateX(-50%) rotate(25deg) scale(.96);}
 
-  #bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:25;background:var(--field-2);border-top:1px solid var(--linea);display:flex;justify-content:center;}
+  #bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:25;background:var(--field-2);border-top:1px solid var(--linea);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);}
   #bottomnav .nav-inner{max-width:480px;width:100%;display:flex;}
-  #bottomnav button{flex:1;background:none;border:none;color:var(--chalk-dim);padding:12px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;font-family:var(--font-m);text-transform:uppercase;letter-spacing:.5px;}
+  #bottomnav button{flex:1;background:none;border:none;color:var(--chalk-dim);padding:12px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:700;font-family:var(--font-m);text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
   #bottomnav button .ic{font-size:19px;}
+  .nav-badge{display:none;position:absolute;top:-3px;right:-7px;width:9px;height:9px;border-radius:50%;background:var(--disco);border:1.5px solid var(--field-2);}
+  .nav-badge.mostrar{display:block;}
   #bottomnav button.active{color:var(--disco);}
 
   #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;}
-  #sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:480px;margin:0 auto;background:var(--field);border-radius:22px 22px 0 0;border:1px solid var(--linea);border-bottom:none;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;}
+  #sheet, .bottom-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:480px;margin:0 auto;background:var(--field);border-radius:22px 22px 0 0;border:1px solid var(--linea);border-bottom:none;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;}
   .sheet-handle{width:38px;height:4px;background:var(--linea);border-radius:99px;margin:0 auto 16px;}
   .sheet-title{font-family:var(--font-d);font-size:22px;margin-bottom:16px;}
   .toggle-two{display:flex;gap:8px;margin-bottom:8px;}
@@ -253,9 +284,11 @@
     <div class="view active" id="view-directorio">
       <div class="scope-toggle">
         <button class="active" data-scope="club">Mi club</button>
-        <button data-scope="red">Toda la red LATAM</button>
+        <button data-scope="red">Red LATAM</button>
       </div>
       <div class="filters" id="filtros-categoria"></div>
+      <div class="filters" id="filtros-fecha"></div>
+      <label class="check-expiradas"><input type="checkbox" id="chk-expiradas"> Mostrar también las expiradas</label>
       <div id="feed-directorio"></div>
     </div>
 
@@ -278,6 +311,11 @@
       <div id="miembros-lista"></div>
     </div>
 
+    <div class="view" id="view-rutinas">
+      <button class="btn btn-ghost" id="btn-nueva-rutina" style="display:none;margin-bottom:16px;">+ Nueva rutina para el equipo</button>
+      <div id="rutinas-lista"></div>
+    </div>
+
     <div class="view" id="view-perfil">
       <div class="club-profile-card">
         <div class="perfil-row"><div class="k">Nombre</div><div class="v" id="pf-nombre">—</div></div>
@@ -286,6 +324,7 @@
         <div class="perfil-row"><div class="k">Disciplina</div><div class="v" id="pf-disciplina">—</div></div>
         <div class="perfil-row"><div class="k">Tu rol</div><div class="v" id="pf-rol">—</div></div>
         <div class="perfil-row"><div class="k">Tu alcance</div><div class="v" id="pf-alcance">—</div></div>
+        <div class="perfil-row"><div class="k">Tu ID de dispositivo</div><div class="v" id="pf-uid" style="font-family:var(--font-m);font-size:10.5px;">—</div></div>
       </div>
       <button class="btn btn-ghost" id="btn-cambiar-club" style="margin-bottom:10px;">Unirme a otro club</button>
     </div>
@@ -296,7 +335,8 @@
   <div id="bottomnav">
     <div class="nav-inner">
       <button class="active" data-view="directorio"><span class="ic">🥏</span>Directorio</button>
-      <button data-view="club"><span class="ic">🏟️</span>Mi club</button>
+      <button data-view="club"><span class="ic" style="position:relative;">🏟️<span id="badge-club" class="nav-badge"></span></span>Mi club</button>
+      <button data-view="rutinas"><span class="ic">💪</span>Rutinas</button>
       <button data-view="perfil"><span class="ic">👤</span>Perfil</button>
     </div>
   </div>
@@ -325,12 +365,13 @@
   <div class="field-group"><label class="field-label">Título</label><input class="input" id="pub-titulo" placeholder="Ej: Busco diseñador gráfico freelance" maxlength="80"></div>
   <div class="field-group"><label class="field-label">Descripción</label><textarea class="input" id="pub-descripcion" placeholder="Cuenta los detalles: qué se necesita, condiciones, para quién es útil…"></textarea></div>
   <div class="field-group"><label class="field-label">Contacto</label><input class="input" id="pub-contacto" placeholder="Teléfono, correo o usuario de red social"></div>
+  <div class="field-group"><label class="field-label">¿Hasta qué fecha es válida esta oportunidad? *</label><input class="input" type="date" id="pub-expira"></div>
 
   <div class="field-group">
     <label class="field-label">¿Quién puede verla?</label>
     <div class="toggle-two">
       <button class="active" data-alcance="club">Solo mi club</button>
-      <button data-alcance="red">Toda la red LATAM</button>
+      <button data-alcance="red">Red LATAM</button>
     </div>
     <div class="nota-permiso" id="alcance-nota">Tu club todavía no te ha dado alcance para publicar en toda la red. Pídele a un admin o capitán que te lo habilite desde "Mi club".</div>
   </div>
@@ -339,14 +380,26 @@
   <button class="btn-link" id="pub-cancelar" style="width:100%;text-align:center;">Cancelar</button>
 </div>
 
+<div id="sheet-rutina" class="bottom-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Nueva rutina para tu equipo</div>
+  <div class="field-group"><label class="field-label">Título</label><input class="input" id="rut-titulo" placeholder="Ej: Circuito de resistencia semanal" maxlength="80"></div>
+  <div class="field-group"><label class="field-label">Instrucciones</label><textarea class="input" id="rut-descripcion" placeholder="Describe los ejercicios, series, repeticiones, duración…"></textarea></div>
+  <div class="field-group"><label class="field-label">Fecha límite</label><input class="input" type="date" id="rut-fecha-limite"></div>
+  <button class="btn btn-primary" id="rut-confirmar" style="margin-top:6px;">Publicar rutina</button>
+  <button class="btn-link" id="rut-cancelar" style="width:100%;text-align:center;">Cancelar</button>
+</div>
+
+<input type="file" id="input-archivo-entrega" accept="image/*,video/*" style="display:none;">
+
 <script type="module">
 const firebaseConfig = {
-  apiKey: "AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM",
-  authDomain: "app4dv.firebaseapp.com",
-  projectId: "app4dv",
-  storageBucket: "app4dv.firebasestorage.app",
-  messagingSenderId: "703581570394",
-  appId: "1:703581570394:web:2dd9a5982841d227ebdf63"
+  apiKey: "PEGA_AQUI_TU_API_KEY",
+  authDomain: "PEGA_AQUI_TU_AUTH_DOMAIN",
+  projectId: "PEGA_AQUI_TU_PROJECT_ID",
+  storageBucket: "PEGA_AQUI_TU_STORAGE_BUCKET",
+  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
+  appId: "PEGA_AQUI_TU_APP_ID"
 };
 
 const CAMPOS_CONFIG = ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
@@ -368,15 +421,20 @@ async function iniciarApp() {
     query, where, onSnapshot, serverTimestamp
   } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js");
   const { getAuth, signInAnonymously, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js");
+  const { getStorage, ref: storageRef, uploadBytes, getDownloadURL } = await import("https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js");
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
+  const storage = getStorage(app);
 
   const COL_CLUBES = "red_dll_clubes";
   const COL_CODIGOS = "red_dll_codigos";
   const COL_MIEMBROS = "red_dll_miembros";
   const COL_OPORTUNIDADES = "red_dll_oportunidades";
+  const COL_SUPERADMINS = "red_dll_superadmins";
+  const COL_RUTINAS = "red_dll_rutinas";
+  const COL_ENTREGAS = "red_dll_entregas";
 
   const PAISES = ["Colombia","México","Argentina","Chile","Perú","Ecuador","Venezuela","Uruguay","Paraguay","Bolivia","Brasil","Costa Rica","Panamá","Guatemala","República Dominicana","Otro"];
   const DISCIPLINAS = ["Ultimate","Disc Golf","Freestyle","Guts","Otro"];
@@ -395,6 +453,13 @@ async function iniciarApp() {
       else { signInAnonymously(auth).catch(e => { console.error('auth:', e); resolve(); }); }
     });
   });
+
+  // ---------- ¿Soy super-admin de toda la red? (función de monetización) ----------
+  let soyRedSuperAdmin = false;
+  try {
+    const snapSuper = await getDoc(doc(db, COL_SUPERADMINS, uid));
+    soyRedSuperAdmin = snapSuper.exists();
+  } catch (e) { soyRedSuperAdmin = false; }
   document.getElementById('loading-screen').style.display = 'none';
 
   function generarCodigo(len = 6) {
@@ -486,6 +551,39 @@ async function iniciarApp() {
     });
   }
   pintarFiltroCategorias();
+
+  const FILTROS_FECHA = [
+    { id:'todas', label:'Cualquier fecha' },
+    { id:'hoy', label:'Hoy' },
+    { id:'semana', label:'Esta semana' },
+    { id:'mes', label:'Este mes' },
+  ];
+  const fechaChipsFiltro = document.getElementById('filtros-fecha');
+  let fechaFiltro = 'todas';
+  function pintarFiltroFecha() {
+    fechaChipsFiltro.innerHTML = '';
+    FILTROS_FECHA.forEach(f => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (fechaFiltro === f.id ? ' active' : '');
+      b.type = 'button'; b.textContent = f.label;
+      b.addEventListener('click', () => { fechaFiltro = f.id; pintarFiltroFecha(); renderFeeds(); });
+      fechaChipsFiltro.appendChild(b);
+    });
+  }
+  pintarFiltroFecha();
+
+  let mostrarExpiradas = false;
+  document.getElementById('chk-expiradas').addEventListener('change', (e) => { mostrarExpiradas = e.target.checked; renderFeeds(); });
+
+  function pasaFiltroFecha(o) {
+    if (fechaFiltro === 'todas') return true;
+    const t = o.creadoEn?.toMillis ? o.creadoEn.toMillis() : 0;
+    const dias = (Date.now() - t) / 86400000;
+    if (fechaFiltro === 'hoy') return dias <= 1;
+    if (fechaFiltro === 'semana') return dias <= 7;
+    if (fechaFiltro === 'mes') return dias <= 31;
+    return true;
+  }
 
   // ---------- Navegación onboarding ----------
   document.getElementById('ob-go-step2').addEventListener('click', () => {
@@ -643,6 +741,38 @@ async function iniciarApp() {
     suscribirMiMembresia();
     suscribirFeeds();
     suscribirMiembros();
+    suscribirRutinas();
+    suscribirEntregas();
+    manejarLinkDirecto();
+  }
+
+  // ---------- Abrir una publicación específica desde un enlace compartido (#op=ID) ----------
+  async function manejarLinkDirecto() {
+    const m = location.hash.match(/op=([^&]+)/);
+    if (!m) return;
+    const opId = decodeURIComponent(m[1]);
+    try {
+      const snap = await getDoc(doc(db, COL_OPORTUNIDADES, opId));
+      if (!snap.exists()) { alert('Esa publicación ya no existe o fue eliminada.'); return; }
+      const o = snap.data();
+      const p = getPerfil();
+      categoriaFiltro = 'todas'; pintarFiltroCategorias();
+      fechaFiltro = 'todas'; pintarFiltroFecha();
+      mostrarExpiradas = true; document.getElementById('chk-expiradas').checked = true;
+      scopeActivo = (o.clubId === p?.clubId) ? 'club' : 'red';
+      document.querySelectorAll('.scope-toggle button').forEach(b => b.classList.toggle('active', b.dataset.scope === scopeActivo));
+      document.querySelectorAll('#bottomnav button').forEach(b => b.classList.toggle('active', b.dataset.view === 'directorio'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-directorio').classList.add('active');
+      renderFeeds();
+      setTimeout(() => {
+        const card = document.querySelector(`.card-op[data-id="${opId}"]`);
+        if (card) { card.classList.add('expandida'); card.scrollIntoView({ behavior:'smooth', block:'center' }); }
+      }, 300);
+    } catch (e) {
+      alert('No tienes acceso a esa publicación — puede ser exclusiva de otro club.');
+      console.error(e);
+    }
   }
 
   function pintarPerfilBasico() {
@@ -654,6 +784,7 @@ async function iniciarApp() {
     document.getElementById('pf-disciplina').textContent = p.disciplina || '—';
     document.getElementById('club-nombre-display').textContent = p.clubNombre || '—';
     document.getElementById('club-meta-display').textContent = [p.ciudad, p.pais].filter(Boolean).join(' · ');
+    document.getElementById('pf-uid').textContent = uid;
   }
 
   // ---------- Mi membresía (rol / alcance en vivo) ----------
@@ -692,6 +823,10 @@ async function iniciarApp() {
     if (btnRed) { btnRed.disabled = !permitido; btnRed.classList.toggle('locked', !permitido); }
     if (nota) nota.style.display = permitido ? 'none' : 'block';
     pintarMiembros();
+    actualizarBadgeClub();
+    const btnNuevaRutina = document.getElementById('btn-nueva-rutina');
+    if (btnNuevaRutina) btnNuevaRutina.style.display = soyAdminOCapitan() ? 'block' : 'none';
+    pintarRutinas();
   }
 
   // ---------- Código de invitación (solo admin) ----------
@@ -725,7 +860,29 @@ async function iniciarApp() {
       miembrosCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
         .sort((a,b) => (orden[a.rol]??3) - (orden[b.rol]??3) || (a.nombre||'').localeCompare(b.nombre||''));
       pintarMiembros();
+      actualizarBadgeClub();
     }, err => console.error('miembros:', err));
+  }
+
+  // Aviso dentro de la app de miembros nuevos (sin servidor de notificaciones push todavía)
+  function claveUltimaRevision(clubId) { return 'redDLL_ultimaRevision_' + clubId; }
+  function actualizarBadgeClub() {
+    const badge = document.getElementById('badge-club');
+    if (!badge) return;
+    const p = getPerfil();
+    if (!p?.clubId || !soyAdminOCapitan()) { badge.classList.remove('mostrar'); return; }
+    const ultimaRevision = Number(localStorage.getItem(claveUltimaRevision(p.clubId)) || 0);
+    const hayNuevos = miembrosCache.some(m => {
+      const t = m.unidoEn?.toMillis ? m.unidoEn.toMillis() : 0;
+      return t > ultimaRevision && m.uid !== uid;
+    });
+    badge.classList.toggle('mostrar', hayNuevos);
+  }
+  function marcarMiembrosComoVistos() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    localStorage.setItem(claveUltimaRevision(p.clubId), String(Date.now()));
+    actualizarBadgeClub();
   }
 
   function badgeRol(rol) {
@@ -777,6 +934,175 @@ async function iniciarApp() {
     catch(e) { alert('No tienes permiso para hacer ese cambio.'); console.error(e); }
   }
 
+  // ---------- Rutinas de entrenamiento ----------
+  let rutinasCache = [];
+  let entregasCache = [];
+  const ESTADO_TXT = { pendiente: '⏳ Pendiente de revisión', aprobada: '✅ Aprobada', rechazada: '❌ Rechazada, vuelve a intentar' };
+
+  function suscribirRutinas() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    const q = query(collection(db, COL_RUTINAS), where('clubId', '==', p.clubId));
+    onSnapshot(q, snap => {
+      rutinasCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(porFechaDesc);
+      pintarRutinas();
+    }, err => console.error('rutinas:', err));
+  }
+
+  function suscribirEntregas() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    const q = query(collection(db, COL_ENTREGAS), where('clubId', '==', p.clubId));
+    onSnapshot(q, snap => {
+      entregasCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      pintarRutinas();
+    }, err => console.error('entregas:', err));
+  }
+
+  function pintarRutinas() {
+    const cont = document.getElementById('rutinas-lista');
+    if (!cont) return;
+    if (!rutinasCache.length) {
+      cont.innerHTML = `<div class="empty-state"><div class="emoji">💪</div><p>Todavía no hay rutinas asignadas para tu club.</p></div>`;
+      return;
+    }
+    cont.innerHTML = rutinasCache.map(r => tarjetaRutina(r)).join('');
+    cont.querySelectorAll('.card-header').forEach(h => h.addEventListener('click', () => { h.closest('.card-op').classList.toggle('expandida'); }));
+    cont.querySelectorAll('.btn-subir-entrega').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); abrirSelectorArchivo(b.dataset.rutina); }));
+    cont.querySelectorAll('.btn-aprobar-entrega').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); revisarEntrega(b.dataset.id, 'aprobada'); }));
+    cont.querySelectorAll('.btn-rechazar-entrega').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); revisarEntrega(b.dataset.id, 'rechazada'); }));
+  }
+
+  function tarjetaRutina(r) {
+    const vencida = r.fechaLimite < Date.now();
+    const miEntrega = entregasCache.find(e => e.rutinaId === r.id && e.jugadorUid === uid);
+    let miSeccion;
+    if (!miEntrega) {
+      miSeccion = `<button class="btn btn-ghost btn-subir-entrega" data-rutina="${r.id}">Subir foto/video como evidencia</button>`;
+    } else {
+      miSeccion = `
+        <div class="mi-entrega-estado">${ESTADO_TXT[miEntrega.estado] || miEntrega.estado}</div>
+        <a href="${miEntrega.mediaUrl}" target="_blank" rel="noopener" class="btn-link">Ver mi evidencia enviada</a>
+        ${miEntrega.comentario ? `<div class="comentario-capitan">"${escapeHtml(miEntrega.comentario)}"</div>` : ''}
+        ${miEntrega.estado === 'rechazada' ? `<button class="btn btn-ghost btn-subir-entrega" data-rutina="${r.id}" style="margin-top:8px;">Volver a intentar</button>` : ''}`;
+    }
+
+    let panelCapitan = '';
+    if (soyAdminOCapitan()) {
+      const entregasDeEsta = entregasCache.filter(e => e.rutinaId === r.id);
+      const filas = entregasDeEsta.length
+        ? entregasDeEsta.map(e => `
+          <div class="member-row">
+            <div><div class="mname">${escapeHtml(e.jugadorNombre)}</div><div class="mbadges"><span class="role-badge" style="background:var(--field-3);color:var(--chalk-dim);">${ESTADO_TXT[e.estado] || e.estado}</span></div></div>
+            <div class="macciones">
+              <a href="${e.mediaUrl}" target="_blank" rel="noopener" class="btn-link" style="width:auto;">Ver</a>
+              ${e.estado === 'pendiente' ? `<button class="btn-link btn-aprobar-entrega" data-id="${e.id}">Aprobar</button><button class="btn-link btn-rechazar-entrega" data-id="${e.id}" style="color:var(--danger);">Rechazar</button>` : ''}
+            </div>
+          </div>`).join('')
+        : '<div class="ob-sub">Nadie ha enviado evidencia todavía.</div>';
+      panelCapitan = `<div class="panel-capitan"><div class="miembros-titulo">Entregas del equipo (${entregasDeEsta.length})</div>${filas}</div>`;
+    }
+
+    return `
+      <div class="card-op">
+        <div class="card-header">
+          <h3>${escapeHtml(r.titulo)}</h3>
+          <div class="card-summary"><span class="card-summary-meta">Límite: ${new Date(r.fechaLimite).toLocaleDateString('es-CO',{day:'numeric',month:'short'})}${vencida ? ' <span class="expirada">(vencida)</span>' : ''}</span><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body">
+          <p class="desc">${escapeHtml(r.descripcion)}</p>
+          <div class="autor">Asignada por <b>${escapeHtml(r.creadaPorNombre)}</b></div>
+          <div class="mi-seccion">${miSeccion}</div>
+          ${panelCapitan}
+        </div>
+      </div>`;
+  }
+
+  // ---------- Crear rutina (solo admin/capitán) ----------
+  const overlaySheetRutina = document.getElementById('overlay');
+  const sheetRutina = document.getElementById('sheet-rutina');
+  document.getElementById('btn-nueva-rutina').addEventListener('click', () => {
+    document.getElementById('rut-titulo').value = '';
+    document.getElementById('rut-descripcion').value = '';
+    const manana = new Date(Date.now() + 86400000).toISOString().slice(0,10);
+    document.getElementById('rut-fecha-limite').min = manana;
+    document.getElementById('rut-fecha-limite').value = '';
+    overlaySheetRutina.style.display = 'block';
+    sheetRutina.style.display = 'block';
+  });
+  document.getElementById('rut-cancelar').addEventListener('click', () => {
+    overlaySheetRutina.style.display = 'none';
+    sheetRutina.style.display = 'none';
+  });
+  document.getElementById('rut-confirmar').addEventListener('click', async () => {
+    const p = getPerfil();
+    const titulo = document.getElementById('rut-titulo').value.trim();
+    const descripcion = document.getElementById('rut-descripcion').value.trim();
+    const fechaStr = document.getElementById('rut-fecha-limite').value;
+    if (!titulo || !descripcion) { alert('Completa el título y las instrucciones.'); return; }
+    if (!fechaStr) { alert('Elige una fecha límite.'); return; }
+    const fechaLimite = new Date(fechaStr + 'T23:59:59').getTime();
+    if (fechaLimite <= Date.now()) { alert('La fecha límite debe ser posterior a hoy.'); return; }
+    try {
+      await addDoc(collection(db, COL_RUTINAS), {
+        clubId: p.clubId, clubNombre: p.clubNombre,
+        creadaPor: uid, creadaPorNombre: p.nombre,
+        titulo, descripcion, fechaLimite,
+        creadoEn: serverTimestamp()
+      });
+      overlaySheetRutina.style.display = 'none';
+      sheetRutina.style.display = 'none';
+    } catch (e) {
+      alert('No se pudo publicar la rutina. Verifica tu permiso de admin/capitán.');
+      console.error(e);
+    }
+  });
+
+  // ---------- Subir evidencia (foto/video) ----------
+  let rutinaIdParaSubir = null;
+  function abrirSelectorArchivo(rutinaId) {
+    rutinaIdParaSubir = rutinaId;
+    document.getElementById('input-archivo-entrega').click();
+  }
+  document.getElementById('input-archivo-entrega').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file || !rutinaIdParaSubir) return;
+    await subirEntrega(rutinaIdParaSubir, file);
+    rutinaIdParaSubir = null;
+  });
+
+  async function subirEntrega(rutinaId, file) {
+    if (file.size > 50 * 1024 * 1024) { alert('El archivo es muy pesado (máximo 50MB). Intenta con un video más corto o una foto.'); return; }
+    const p = getPerfil();
+    const ext = (file.name.split('.').pop() || 'dat').toLowerCase();
+    const path = `entregas/${p.clubId}/${rutinaId}/${uid}_${Date.now()}.${ext}`;
+    try {
+      const fileRef = storageRef(storage, path);
+      await uploadBytes(fileRef, file);
+      const url = await getDownloadURL(fileRef);
+      const tipo = file.type.startsWith('video') ? 'video' : 'imagen';
+      await setDoc(doc(db, COL_ENTREGAS, rutinaId + '_' + uid), {
+        rutinaId, clubId: p.clubId,
+        jugadorUid: uid, jugadorNombre: p.nombre,
+        mediaUrl: url, mediaTipo: tipo,
+        estado: 'pendiente', comentario: null,
+        enviadoEn: serverTimestamp()
+      });
+    } catch (e) {
+      alert('No se pudo subir el archivo. Revisa tu conexión, o si ya se activó Firebase Storage.');
+      console.error(e);
+    }
+  }
+
+  async function revisarEntrega(entregaId, nuevoEstado) {
+    let comentario = null;
+    if (nuevoEstado === 'rechazada') comentario = prompt('¿Algún comentario para el jugador? (opcional)') || null;
+    try {
+      await updateDoc(doc(db, COL_ENTREGAS, entregaId), { estado: nuevoEstado, comentario, revisadoEn: serverTimestamp() });
+    } catch (e) { alert('No se pudo actualizar la entrega.'); console.error(e); }
+  }
+
   // ---------- Navegación inferior ----------
   document.querySelectorAll('#bottomnav button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -784,6 +1110,7 @@ async function iniciarApp() {
       btn.classList.add('active');
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById('view-' + btn.dataset.view).classList.add('active');
+      if (btn.dataset.view === 'club') marcarMiembrosComoVistos();
     });
   });
 
@@ -823,15 +1150,54 @@ async function iniciarApp() {
     return false;
   }
 
+  function puedeDestacar(o) {
+    const p = getPerfil();
+    if (o.clubId === p?.clubId && soyAdminOCapitan()) return true;
+    if (soyRedSuperAdmin) return true;
+    return false;
+  }
+
+  function estaDestacada(o) { return !!o.destacado && o.destacadoHasta && o.destacadoHasta > Date.now(); }
+
   function pintarFeed(contenedorId, lista) {
     const cont = document.getElementById(contenedorId);
-    const filtrada = categoriaFiltro === 'todas' ? lista : lista.filter(o => o.categoria === categoriaFiltro);
+    let filtrada = categoriaFiltro === 'todas' ? lista : lista.filter(o => o.categoria === categoriaFiltro);
+    filtrada = filtrada.filter(pasaFiltroFecha);
+    if (!mostrarExpiradas) filtrada = filtrada.filter(o => !o.expiraEn || o.expiraEn >= Date.now());
     if (!filtrada.length) {
       cont.innerHTML = `<div class="empty-state"><div class="emoji">🥏</div><p>Todavía no hay nada publicado aquí.<br>Sé el primero en compartir una oportunidad con tu comunidad.</p></div>`;
       return;
     }
+    filtrada = filtrada.slice().sort((a,b) => (estaDestacada(b)?1:0) - (estaDestacada(a)?1:0));
     cont.innerHTML = filtrada.map(o => tarjetaOportunidad(o)).join('');
     cont.querySelectorAll('.btn-eliminar-op').forEach(b => b.addEventListener('click', () => eliminarOportunidad(b.dataset.id)));
+    cont.querySelectorAll('.btn-compartir-op').forEach(b => b.addEventListener('click', () => compartirOportunidad(b.dataset.id)));
+    cont.querySelectorAll('.btn-destacar-op').forEach(b => b.addEventListener('click', () => toggleDestacado(b.dataset.id, b.dataset.accion === 'activar')));
+    cont.querySelectorAll('.card-header').forEach(h => h.addEventListener('click', () => { h.closest('.card-op').classList.toggle('expandida'); }));
+  }
+
+  function textoExpiracion(o) {
+    if (!o.expiraEn) return '';
+    const dias = Math.ceil((o.expiraEn - Date.now()) / 86400000);
+    if (dias < 0) return `<span class="expirada">Expiró hace ${Math.abs(dias)} d</span>`;
+    if (dias === 0) return `<span class="expira-pronto">Expira hoy</span>`;
+    if (dias <= 3) return `<span class="expira-pronto">Expira en ${dias} d</span>`;
+    return `Válida hasta ${new Date(o.expiraEn).toLocaleDateString('es-CO', { day:'numeric', month:'short' })}`;
+  }
+
+  async function compartirOportunidad(opId) {
+    const url = location.origin + location.pathname + '#op=' + opId;
+    if (navigator.share) { try { await navigator.share({ url, title: 'Oportunidad en la Red · Desde La Línea' }); } catch(e) {} }
+    else { try { await navigator.clipboard.writeText(url); alert('Enlace copiado.'); } catch(e) { alert(url); } }
+  }
+
+  async function toggleDestacado(opId, activar) {
+    try {
+      await updateDoc(doc(db, COL_OPORTUNIDADES, opId), {
+        destacado: activar,
+        destacadoHasta: activar ? Date.now() + 7 * 86400000 : null
+      });
+    } catch(e) { alert('No se pudo actualizar el destacado.'); console.error(e); }
   }
 
   function tarjetaOportunidad(o) {
@@ -840,15 +1206,27 @@ async function iniciarApp() {
       ? `Publicado por <b>${escapeHtml(o.autorNombre)}</b> a nombre de <b>${escapeHtml(o.nombrePersona||'')}</b> (${escapeHtml(o.relacion||'')})`
       : `Publicado por <b>${escapeHtml(o.autorNombre)}</b>`;
     const scopeTxt = o.alcance === 'red' ? '🌎 Red LATAM' : '🏟️ ' + escapeHtml(o.clubNombre || 'Club');
-    const eliminarBtn = puedeEliminar(o) ? `<button class="btn-eliminar-op" data-id="${o.id}">Eliminar</button>` : '<span></span>';
+    const eliminarBtn = puedeEliminar(o) ? `<button class="btn-eliminar-op" data-id="${o.id}">Eliminar</button>` : '';
+    const activa = estaDestacada(o);
+    const destacarBtn = puedeDestacar(o)
+      ? (activa
+          ? `<button class="btn-destacar-op quitar" data-id="${o.id}" data-accion="quitar">Quitar destacado</button>`
+          : `<button class="btn-destacar-op" data-id="${o.id}" data-accion="activar">⭐ Destacar 7 días</button>`)
+      : '';
+    const tagDestacada = activa ? `<span class="destacado-tag">⭐ Destacada</span> · ` : '';
     return `
-      <div class="card-op">
-        <div class="card-top"><span class="cat-chip" style="background:${cat.bg};color:${cat.fg};">${cat.emoji} ${cat.label}</span><span class="scope-badge">${scopeTxt}</span></div>
-        <h3>${escapeHtml(o.titulo)}</h3>
-        <p class="desc">${escapeHtml(o.descripcion)}</p>
-        <div class="autor">${autorTxt} · ${escapeHtml(o.clubNombre||'')}</div>
-        <div class="contacto-box"><span class="txt">${escapeHtml(o.contacto||'')}</span></div>
-        <div class="card-footer">${eliminarBtn}<span class="fecha">${formatearFecha(o.creadoEn)}</span></div>
+      <div class="card-op${activa ? ' destacada' : ''}" data-id="${o.id}">
+        <div class="card-header" data-toggle="${o.id}">
+          <div class="card-top"><span class="cat-chip" style="background:${cat.bg};color:${cat.fg};">${cat.emoji} ${cat.label}</span><span class="scope-badge">${scopeTxt}</span></div>
+          <h3>${escapeHtml(o.titulo)}</h3>
+          <div class="card-summary"><span class="card-summary-meta">${tagDestacada}${formatearFecha(o.creadoEn)} · ${textoExpiracion(o)}</span><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body">
+          <p class="desc">${escapeHtml(o.descripcion)}</p>
+          <div class="autor">${autorTxt} · ${escapeHtml(o.clubNombre||'')}</div>
+          <div class="contacto-box"><span class="txt">${escapeHtml(o.contacto||'')}</span></div>
+          <div class="card-footer"><div class="card-footer-links"><button class="btn-compartir-op" data-id="${o.id}">Compartir</button>${eliminarBtn}${destacarBtn}</div></div>
+        </div>
       </div>`;
   }
 
@@ -866,12 +1244,20 @@ async function iniciarApp() {
     document.querySelectorAll('[data-quien]').forEach(b => b.classList.toggle('active', b.dataset.quien==='yo'));
     document.querySelectorAll('[data-alcance]').forEach(b => b.classList.toggle('active', b.dataset.alcance==='club'));
     document.getElementById('cercano-fields').style.display = 'none';
+    const manana = new Date(Date.now() + 86400000).toISOString().slice(0,10);
+    const expiraInput = document.getElementById('pub-expira');
+    expiraInput.min = manana;
+    expiraInput.value = '';
     overlay.style.display = 'block'; sheet.style.display = 'block';
   }
   function cerrarSheet() { overlay.style.display = 'none'; sheet.style.display = 'none'; }
   document.getElementById('fab').addEventListener('click', abrirSheet);
   document.getElementById('pub-cancelar').addEventListener('click', cerrarSheet);
-  overlay.addEventListener('click', cerrarSheet);
+  overlay.addEventListener('click', () => {
+    cerrarSheet();
+    sheetRutina.style.display = 'none';
+    overlay.style.display = 'none';
+  });
 
   let quienEsElegido = 'yo';
   document.querySelectorAll('[data-quien]').forEach(btn => {
@@ -900,9 +1286,13 @@ async function iniciarApp() {
     const contacto = document.getElementById('pub-contacto').value.trim();
     const nombrePersona = document.getElementById('pub-cercano-nombre').value.trim();
     const relacion = document.getElementById('pub-cercano-relacion').value.trim();
+    const expiraStr = document.getElementById('pub-expira').value;
 
     if (!titulo || !descripcion || !contacto) { alert('Completa título, descripción y contacto.'); return; }
     if (quienEsElegido === 'cercano' && (!nombrePersona || !relacion)) { alert('Cuéntanos el nombre y la relación de la persona a la que representas.'); return; }
+    if (!expiraStr) { alert('Elige hasta qué fecha es válida esta oportunidad (es obligatorio).'); return; }
+    const expiraEn = new Date(expiraStr + 'T23:59:59').getTime();
+    if (expiraEn <= Date.now()) { alert('La fecha de expiración debe ser posterior a hoy.'); return; }
 
     try {
       await addDoc(collection(db, COL_OPORTUNIDADES), {
@@ -917,6 +1307,9 @@ async function iniciarApp() {
         nombrePersona: quienEsElegido === 'cercano' ? nombrePersona : null,
         relacion: quienEsElegido === 'cercano' ? relacion : null,
         alcance: alcanceElegido,
+        expiraEn,
+        destacado: false,
+        destacadoHasta: null,
         estado: 'activa',
         creadoEn: serverTimestamp()
       });
@@ -925,6 +1318,7 @@ async function iniciarApp() {
       document.getElementById('pub-contacto').value = '';
       document.getElementById('pub-cercano-nombre').value = '';
       document.getElementById('pub-cercano-relacion').value = '';
+      document.getElementById('pub-expira').value = '';
       cerrarSheet();
     } catch (e) {
       alert('No se pudo publicar. Revisa tu conexión, tu configuración de Firebase o si tienes el alcance necesario.');
