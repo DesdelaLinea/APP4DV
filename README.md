@@ -31,6 +31,9 @@ Perfil del club con logo, disciplinas, reglas internas editables, código de inv
 ### 💪 Rutinas
 Admins y capitanes publican rutinas de entrenamiento con fecha límite; cada jugador sube evidencia (foto o video) y el club la aprueba o rechaza, con reintento si fue rechazada.
 
+### 🎵 Playlist del equipo
+Cualquier miembro puede buscar y agregar canciones —por YouTube o por Spotify— a una cola compartida del club, y reproducirlas directamente desde la app: YouTube se reproduce con el IFrame Player oficial (sin necesidad de cuenta), y Spotify usa login propio del club (Authorization Code + PKCE, sin backend) para armar una playlist real en Spotify y reproducirla con su reproductor embebido. Cualquiera puede quitar su propia canción; admin/capitán puede moderar cualquiera.
+
 ### 👤 Perfil
 Datos personales, club, disciplina, rol y alcance dentro de la red. Incluye aseguramiento de cuenta: se puede vincular la identidad anónima del dispositivo a un correo y contraseña para recuperar el acceso desde otro celular.
 
@@ -64,6 +67,7 @@ Datos personales, club, disciplina, rol y alcance dentro de la red. Incluye aseg
 | `red_dll_rutinas` | Rutinas de entrenamiento asignadas por el club |
 | `red_dll_entregas` | Evidencia de cumplimiento de rutinas |
 | `red_dll_eventos` | Eventos y torneos del club, con asistencia |
+| `red_dll_playlist` | Canciones (YouTube o Spotify) elegidas por el equipo |
 | `red_dll_perfiles` | Respaldo del perfil por usuario, para recuperación de cuenta |
 | `red_dll_superadmins` | Super-administradores de toda la red (se otorga manualmente desde consola) |
 
@@ -81,18 +85,23 @@ Todos los permisos —quién puede leer, publicar, moderar o borrar— quedan de
 6. Pega ese objeto en `index.html`, reemplazando los campos `PEGA_AQUI_TU_...`.
 7. Copia el contenido de `firestore.rules` en **Firestore Database → Reglas** en la consola de Firebase.
 8. (Opcional) Activa **Storage** si quieres soportar logos de club y evidencias en foto/video.
-9. Sirve `index.html` como sitio estático — por ejemplo con GitHub Pages, tal como está desplegado actualmente.
+9. (Opcional, para la playlist) Configura las dos API keys al inicio del `<script>`, reemplazando `PEGA_AQUI_TU_...`:
+   - **YouTube:** crea un proyecto en [Google Cloud Console](https://console.cloud.google.com), activa **YouTube Data API v3**, genera una API key y restríngela por HTTP referrer a tu dominio (`desdelalinea.github.io/*`).
+   - **Spotify:** registra una app en el [Spotify Developer Dashboard](https://developer.spotify.com/dashboard), copia el **Client ID**, y agrega como *Redirect URI* la URL exacta donde vive tu `index.html` (por ejemplo `https://desdelalinea.github.io/APP4DV/`). No hace falta backend ni Client Secret — la app usa el flujo *Authorization Code con PKCE*, pensado para apps sin servidor.
+10. Sirve `index.html` como sitio estático — por ejemplo con GitHub Pages, tal como está desplegado actualmente.
 
-Si falta algún campo de configuración, la propia app lo detecta y muestra una pantalla de ayuda con los pasos pendientes.
+Si falta algún campo de configuración de Firebase, la propia app lo detecta y muestra una pantalla de ayuda con los pasos pendientes. Si faltan las de YouTube/Spotify, solo esa parte de la playlist queda deshabilitada — el resto de la app funciona igual.
+
+**Nota sobre Spotify:** la primera vez que un admin o capitán conecta la cuenta de Spotify del club, la app crea automáticamente una playlist pública llamada "`<Club>` · Red DLL" y guarda su ID en el club. Todo miembro que también conecte su cuenta puede agregarle canciones vía la API; si quieres que cualquiera pueda agregar canciones también directamente desde la app de Spotify (no solo desde RED), márcala como colaborativa manualmente en Spotify después de creada.
 
 ---
 
 ## Sobre Desde La Línea
 
-RED DISCO VOLADOR es un proyecto de **Desde La Línea**, plataforma de organización de eventos, transmisión (UltiStats) y herramientas digitales para la comunidad de disco volador en Latinoamérica — con base en Medellín, Colombia.
+RED es un proyecto de **Desde La Línea**, plataforma de organización de eventos, transmisión (UltiStats) y herramientas digitales para la comunidad de disco volador en Latinoamérica — con base en Medellín, Colombia.
 
 ---
 
 ## Contacto
 
-¿Preguntas, ideas o quieres sumar a tu club a la red? Escríbenos a **desdelalinea.tv@gmail.com**.
+¿Preguntas, ideas o quieres sumar a tu club a la red? Escríbenos a **desdelalinea@gmail.com**.
