@@ -179,6 +179,9 @@
   .club-profile-card{background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
   .club-profile-card h2{font-family:var(--font-d);font-size:24px;margin:0 0 4px;}
   .club-profile-card .cmeta{font-family:var(--font-m);font-size:12px;color:var(--chalk-dim);}
+  .club-logo-row{display:flex;align-items:center;gap:14px;margin-bottom:4px;}
+  .club-logo{width:56px;height:56px;border-radius:16px;object-fit:cover;flex-shrink:0;}
+  .club-logo-placeholder{background:var(--field-3);display:flex;align-items:center;justify-content:center;font-size:26px;}
   .disc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
   .disc-tags span{font-size:11px;background:var(--field-3);padding:5px 10px;border-radius:999px;color:var(--chalk-dim);}
 
@@ -240,6 +243,7 @@
       <div class="field-group"><label class="field-label">Tu nombre</label><input class="input" id="ob-nombre" placeholder="Ej: Camila Restrepo" maxlength="60"></div>
       <div class="field-group"><label class="field-label">País</label><select class="input" id="ob-pais"></select></div>
       <div class="field-group"><label class="field-label">Ciudad</label><input class="input" id="ob-ciudad" placeholder="Ej: Medellín" maxlength="60"></div>
+      <div class="field-group"><label class="field-label">Teléfono / WhatsApp (opcional)</label><input class="input" id="ob-telefono" placeholder="Ej: 573001234567, con código de país" maxlength="20"></div>
       <div class="field-group"><label class="field-label">¿Qué disciplina practicas?</label><div class="chip-row" id="ob-disciplina-chips"></div></div>
       <button class="btn btn-primary" id="ob-go-step2" style="margin-top:8px;">Continuar</button>
     </div>
@@ -294,9 +298,16 @@
 
     <div class="view" id="view-club">
       <div class="club-profile-card">
-        <h2 id="club-nombre-display">—</h2>
-        <div class="cmeta" id="club-meta-display">—</div>
+        <div class="club-logo-row">
+          <img id="club-logo-img" class="club-logo" style="display:none;">
+          <div id="club-logo-placeholder" class="club-logo club-logo-placeholder">🥏</div>
+          <div style="flex:1;">
+            <h2 id="club-nombre-display">—</h2>
+            <div class="cmeta" id="club-meta-display">—</div>
+          </div>
+        </div>
         <div class="disc-tags" id="club-disc-tags"></div>
+        <button class="btn-link" id="btn-cambiar-logo" style="display:none;">Cambiar logo del club</button>
       </div>
       <button class="btn btn-ghost" id="btn-invitar" style="margin-bottom:20px;">Invitar a mi equipo</button>
 
@@ -305,6 +316,30 @@
         <div class="contacto-box" style="margin-bottom:6px;"><span class="txt" id="codigo-actual-display">------</span><button class="btn-link" id="btn-copiar-codigo" style="width:auto;padding:0;">Copiar</button></div>
         <div class="chelp">Compártelo solo con quien confíes. Si lo regeneras, el código anterior deja de servir (los que ya se unieron no se ven afectados).</div>
         <button class="btn btn-ghost" id="btn-regenerar-codigo">Regenerar código</button>
+      </div>
+
+      <div class="club-profile-card" id="reglas-box">
+        <div class="miembros-titulo">Reglas internas del club</div>
+        <div id="reglas-texto-lectura" class="ob-sub" style="margin-bottom:0;">Este club todavía no ha escrito sus reglas internas.</div>
+        <textarea class="input" id="reglas-textarea" style="display:none;margin-top:8px;" placeholder="Ej: puntualidad en entrenos, código de conducta, uso del uniforme…"></textarea>
+        <button class="btn btn-ghost" id="btn-editar-reglas" style="display:none;margin-top:10px;">Editar reglas</button>
+        <button class="btn btn-primary" id="btn-guardar-reglas" style="display:none;margin-top:10px;">Guardar reglas</button>
+      </div>
+
+      <div class="club-profile-card">
+        <div class="miembros-titulo">Actividad del club</div>
+        <div id="stats-club-resumen" class="ob-sub" style="margin-bottom:0;">—</div>
+      </div>
+
+      <div class="miembros-titulo">Eventos y torneos</div>
+      <button class="btn btn-ghost" id="btn-nuevo-evento" style="display:none;margin-bottom:14px;">+ Nuevo evento</button>
+      <div id="eventos-lista" style="margin-bottom:22px;"></div>
+
+      <div id="whatsapp-box" style="display:none;margin-bottom:22px;">
+        <div class="miembros-titulo">Enviar mensaje al equipo (WhatsApp)</div>
+        <textarea class="input" id="wa-mensaje" placeholder="Escribe el anuncio para tu equipo…" style="margin-bottom:10px;"></textarea>
+        <button class="btn btn-ghost" id="wa-generar" style="margin-bottom:12px;">Generar enlaces de WhatsApp</button>
+        <div id="wa-lista-miembros"></div>
       </div>
 
       <div class="miembros-titulo">Miembros de tu club</div>
@@ -390,16 +425,28 @@
   <button class="btn-link" id="rut-cancelar" style="width:100%;text-align:center;">Cancelar</button>
 </div>
 
+<div id="sheet-evento" class="bottom-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Nuevo evento del club</div>
+  <div class="field-group"><label class="field-label">Título</label><input class="input" id="ev-titulo" placeholder="Ej: Torneo Interclubes Medellín" maxlength="80"></div>
+  <div class="field-group"><label class="field-label">Tipo</label><div class="chip-row" id="ev-tipo-chips"></div></div>
+  <div class="field-group"><label class="field-label">Fecha</label><input class="input" type="date" id="ev-fecha"></div>
+  <div class="field-group"><label class="field-label">Descripción (opcional)</label><textarea class="input" id="ev-descripcion" placeholder="Lugar, hora de encuentro, detalles…"></textarea></div>
+  <button class="btn btn-primary" id="ev-confirmar" style="margin-top:6px;">Publicar evento</button>
+  <button class="btn-link" id="ev-cancelar" style="width:100%;text-align:center;">Cancelar</button>
+</div>
+
 <input type="file" id="input-archivo-entrega" accept="image/*,video/*" style="display:none;">
+<input type="file" id="input-archivo-logo" accept="image/*" style="display:none;">
 
 <script type="module">
 const firebaseConfig = {
-  apiKey: "AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM",
-  authDomain: "app4dv.firebaseapp.com",
-  projectId: "app4dv",
-  storageBucket: "app4dv.firebasestorage.app",
-  messagingSenderId: "703581570394",
-  appId: "1:703581570394:web:2dd9a5982841d227ebdf63"
+  apiKey: "PEGA_AQUI_TU_API_KEY",
+  authDomain: "PEGA_AQUI_TU_AUTH_DOMAIN",
+  projectId: "PEGA_AQUI_TU_PROJECT_ID",
+  storageBucket: "PEGA_AQUI_TU_STORAGE_BUCKET",
+  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
+  appId: "PEGA_AQUI_TU_APP_ID"
 };
 
 const CAMPOS_CONFIG = ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
@@ -435,6 +482,7 @@ async function iniciarApp() {
   const COL_SUPERADMINS = "red_dll_superadmins";
   const COL_RUTINAS = "red_dll_rutinas";
   const COL_ENTREGAS = "red_dll_entregas";
+  const COL_EVENTOS = "red_dll_eventos";
 
   const PAISES = ["Colombia","México","Argentina","Chile","Perú","Ecuador","Venezuela","Uruguay","Paraguay","Bolivia","Brasil","Costa Rica","Panamá","Guatemala","República Dominicana","Otro"];
   const DISCIPLINAS = ["Ultimate","Disc Golf","Freestyle","Guts","Otro"];
@@ -444,6 +492,7 @@ async function iniciarApp() {
     { id:"descuento", label:"Descuento", emoji:"🏷️", bg:"var(--oro-dim)",       fg:"var(--oro)" },
     { id:"producto",  label:"Producto",  emoji:"📦", bg:"var(--azul-dim)",      fg:"var(--azul)" },
   ];
+  const TIPOS_EVENTO = ["Torneo","Entreno especial","Encuentro","Otro"];
 
   // ---------- Autenticación real (anónima) ----------
   let uid = null;
@@ -654,6 +703,7 @@ async function iniciarApp() {
       await setDoc(membershipRef, {
         clubId: clubParaUnirse.id, uid,
         nombre: document.getElementById('ob-nombre').value.trim(),
+        telefono: document.getElementById('ob-telefono').value.trim(),
         rol: 'miembro', alcance: 'club',
         codigoIngresado: codigo,
         unidoEn: serverTimestamp()
@@ -688,6 +738,7 @@ async function iniciarApp() {
       await setDoc(doc(db, COL_MIEMBROS, clubRef.id + '_' + uid), {
         clubId: clubRef.id, uid,
         nombre: document.getElementById('ob-nombre').value.trim(),
+        telefono: document.getElementById('ob-telefono').value.trim(),
         rol: 'admin', alcance: 'red',
         unidoEn: serverTimestamp()
       });
@@ -719,6 +770,7 @@ async function iniciarApp() {
       nombre: document.getElementById('ob-nombre').value.trim(),
       pais: document.getElementById('ob-pais').value,
       ciudad: document.getElementById('ob-ciudad').value.trim(),
+      telefono: document.getElementById('ob-telefono').value.trim(),
       disciplina: disciplinaElegida,
       clubId, clubNombre
     };
@@ -739,10 +791,12 @@ async function iniciarApp() {
     document.getElementById('app').style.display = 'block';
     pintarPerfilBasico();
     suscribirMiMembresia();
+    suscribirMiClub();
     suscribirFeeds();
     suscribirMiembros();
     suscribirRutinas();
     suscribirEntregas();
+    suscribirEventos();
     manejarLinkDirecto();
   }
 
@@ -798,10 +852,40 @@ async function iniciarApp() {
       pintarPerfilRolAlcance();
       actualizarUISegunPermiso();
       if (miMembresiaActual?.rol === 'admin' && !codigoSuscrito) { codigoSuscrito = true; suscribirCodigoAdmin(); }
-      const club = clubesCache.find(c => c.id === p.clubId);
-      const tagsEl = document.getElementById('club-disc-tags');
-      if (club) { tagsEl.innerHTML = ''; (club.disciplinas||[]).forEach(d => { const s=document.createElement('span'); s.textContent=d; tagsEl.appendChild(s); }); }
+      pintarClubInfo();
     }, err => console.error('mi membresia:', err));
+  }
+
+  // ---------- Información del club (disciplinas, logo, reglas internas) ----------
+  let miClubActual = null;
+  function suscribirMiClub() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    onSnapshot(doc(db, COL_CLUBES, p.clubId), snap => {
+      miClubActual = snap.exists() ? snap.data() : null;
+      pintarClubInfo();
+    }, err => console.error('mi club:', err));
+  }
+
+  function pintarClubInfo() {
+    if (!miClubActual) return;
+    const tagsEl = document.getElementById('club-disc-tags');
+    tagsEl.innerHTML = '';
+    (miClubActual.disciplinas || []).forEach(d => { const s = document.createElement('span'); s.textContent = d; tagsEl.appendChild(s); });
+
+    const img = document.getElementById('club-logo-img');
+    const placeholder = document.getElementById('club-logo-placeholder');
+    if (miClubActual.logoUrl) { img.src = miClubActual.logoUrl; img.style.display = 'block'; placeholder.style.display = 'none'; }
+    else { img.style.display = 'none'; placeholder.style.display = 'flex'; }
+
+    const reglasLectura = document.getElementById('reglas-texto-lectura');
+    reglasLectura.textContent = miClubActual.reglas && miClubActual.reglas.trim()
+      ? miClubActual.reglas
+      : 'Este club todavía no ha escrito sus reglas internas.';
+
+    const puedeGestionar = soyAdminOCapitan();
+    document.getElementById('btn-cambiar-logo').style.display = puedeGestionar ? 'block' : 'none';
+    document.getElementById('btn-editar-reglas').style.display = (puedeGestionar && document.getElementById('reglas-textarea').style.display === 'none') ? 'block' : 'none';
   }
 
   function pintarPerfilRolAlcance() {
@@ -824,9 +908,15 @@ async function iniciarApp() {
     if (nota) nota.style.display = permitido ? 'none' : 'block';
     pintarMiembros();
     actualizarBadgeClub();
+    const esGestor = soyAdminOCapitan();
     const btnNuevaRutina = document.getElementById('btn-nueva-rutina');
-    if (btnNuevaRutina) btnNuevaRutina.style.display = soyAdminOCapitan() ? 'block' : 'none';
+    if (btnNuevaRutina) btnNuevaRutina.style.display = esGestor ? 'block' : 'none';
+    const btnNuevoEvento = document.getElementById('btn-nuevo-evento');
+    if (btnNuevoEvento) btnNuevoEvento.style.display = esGestor ? 'block' : 'none';
+    const waBox = document.getElementById('whatsapp-box');
+    if (waBox) waBox.style.display = esGestor ? 'block' : 'none';
     pintarRutinas();
+    pintarEventos();
   }
 
   // ---------- Código de invitación (solo admin) ----------
@@ -896,6 +986,12 @@ async function iniciarApp() {
                : `<span class="role-badge" style="background:var(--field-3);color:var(--chalk-dim);">🏟️ Club</span>`;
   }
 
+  function actividadDe(m) {
+    const rutinasAprobadas = entregasCache.filter(e => e.jugadorUid === m.uid && e.estado === 'aprobada').length;
+    const eventosAsistidos = eventosCache.filter(ev => (ev.asistentes||[]).includes(m.uid)).length;
+    return `💪 ${rutinasAprobadas} rutinas cumplidas · 📅 ${eventosAsistidos} eventos`;
+  }
+
   function pintarMiembros() {
     const cont = document.getElementById('miembros-lista');
     if (!cont) return;
@@ -916,7 +1012,7 @@ async function iniciarApp() {
       }
       return `
         <div class="member-row">
-          <div><div class="mname">${escapeHtml(m.nombre)}${esYo ? ' (tú)' : ''}</div><div class="mbadges">${badgeRol(m.rol)}${badgeAlcance(m)}</div></div>
+          <div><div class="mname">${escapeHtml(m.nombre)}${esYo ? ' (tú)' : ''}</div><div class="mbadges">${badgeRol(m.rol)}${badgeAlcance(m)}</div><div class="ob-sub" style="margin:4px 0 0;font-size:11px;">${actividadDe(m)}</div></div>
           <div class="macciones">${acciones}</div>
         </div>`;
     }).join('') || '<div class="ob-sub">Aún no hay miembros registrados.</div>';
@@ -946,6 +1042,7 @@ async function iniciarApp() {
     onSnapshot(q, snap => {
       rutinasCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(porFechaDesc);
       pintarRutinas();
+      pintarStatsClub();
     }, err => console.error('rutinas:', err));
   }
 
@@ -956,6 +1053,7 @@ async function iniciarApp() {
     onSnapshot(q, snap => {
       entregasCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       pintarRutinas();
+      pintarMiembros();
     }, err => console.error('entregas:', err));
   }
 
@@ -1103,6 +1201,170 @@ async function iniciarApp() {
     } catch (e) { alert('No se pudo actualizar la entrega.'); console.error(e); }
   }
 
+  // ---------- Logo del club ----------
+  document.getElementById('btn-cambiar-logo').addEventListener('click', () => {
+    document.getElementById('input-archivo-logo').click();
+  });
+  document.getElementById('input-archivo-logo').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { alert('La imagen es muy pesada (máximo 5MB).'); return; }
+    const p = getPerfil();
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    try {
+      const fileRef = storageRef(storage, `logos/${p.clubId}/logo_${Date.now()}.${ext}`);
+      await uploadBytes(fileRef, file);
+      const url = await getDownloadURL(fileRef);
+      await updateDoc(doc(db, COL_CLUBES, p.clubId), { logoUrl: url });
+    } catch (e) {
+      alert('No se pudo subir el logo. Revisa tu conexión o si ya activaste Firebase Storage.');
+      console.error(e);
+    }
+  });
+
+  // ---------- Reglas internas del club ----------
+  document.getElementById('btn-editar-reglas').addEventListener('click', () => {
+    document.getElementById('reglas-textarea').value = (miClubActual && miClubActual.reglas) || '';
+    document.getElementById('reglas-textarea').style.display = 'block';
+    document.getElementById('reglas-texto-lectura').style.display = 'none';
+    document.getElementById('btn-editar-reglas').style.display = 'none';
+    document.getElementById('btn-guardar-reglas').style.display = 'block';
+  });
+  document.getElementById('btn-guardar-reglas').addEventListener('click', async () => {
+    const p = getPerfil();
+    const texto = document.getElementById('reglas-textarea').value.trim();
+    try {
+      await updateDoc(doc(db, COL_CLUBES, p.clubId), { reglas: texto });
+      document.getElementById('reglas-textarea').style.display = 'none';
+      document.getElementById('btn-guardar-reglas').style.display = 'none';
+      pintarClubInfo();
+    } catch (e) { alert('No se pudo guardar las reglas.'); console.error(e); }
+  });
+
+  // ---------- Eventos y torneos (historial simple del club) ----------
+  let eventosCache = [];
+  let tipoEventoElegido = TIPOS_EVENTO[0];
+  const chipsTipoEvento = document.getElementById('ev-tipo-chips');
+  function pintarChipsTipoEvento() {
+    chipsTipoEvento.innerHTML = '';
+    TIPOS_EVENTO.forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (t === tipoEventoElegido ? ' active' : '');
+      b.type = 'button'; b.textContent = t;
+      b.addEventListener('click', () => { tipoEventoElegido = t; pintarChipsTipoEvento(); });
+      chipsTipoEvento.appendChild(b);
+    });
+  }
+  pintarChipsTipoEvento();
+
+  function suscribirEventos() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    const q = query(collection(db, COL_EVENTOS), where('clubId', '==', p.clubId));
+    onSnapshot(q, snap => {
+      eventosCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.fecha - a.fecha);
+      pintarEventos();
+      pintarStatsClub();
+      pintarMiembros();
+    }, err => console.error('eventos:', err));
+  }
+
+  function pintarEventos() {
+    const cont = document.getElementById('eventos-lista');
+    if (!cont) return;
+    if (!eventosCache.length) {
+      cont.innerHTML = `<div class="empty-state"><div class="emoji">📅</div><p>Todavía no hay eventos registrados.</p></div>`;
+      return;
+    }
+    cont.innerHTML = eventosCache.map(ev => tarjetaEvento(ev)).join('');
+    cont.querySelectorAll('.card-header').forEach(h => h.addEventListener('click', () => { h.closest('.card-op').classList.toggle('expandida'); }));
+    cont.querySelectorAll('.btn-asistencia').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); toggleAsistencia(b.dataset.id); }));
+  }
+
+  function tarjetaEvento(ev) {
+    const pasado = ev.fecha < Date.now();
+    const asistentes = ev.asistentes || [];
+    const yaAsisti = asistentes.includes(uid);
+    const nombresAsistentes = asistentes.map(a => miembrosCache.find(m => m.uid === a)?.nombre).filter(Boolean);
+    return `
+      <div class="card-op">
+        <div class="card-header">
+          <div class="card-top"><span class="cat-chip" style="background:var(--azul-dim);color:var(--azul);">${escapeHtml(ev.tipo||'Evento')}</span><span class="scope-badge">${pasado ? 'Ya pasó' : 'Próximo'}</span></div>
+          <h3>${escapeHtml(ev.titulo)}</h3>
+          <div class="card-summary"><span class="card-summary-meta">${new Date(ev.fecha).toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'})} · ${asistentes.length} asistieron</span><span class="chevron">▼</span></div>
+        </div>
+        <div class="card-body">
+          ${ev.descripcion ? `<p class="desc">${escapeHtml(ev.descripcion)}</p>` : ''}
+          <button class="btn ${yaAsisti ? 'btn-primary' : 'btn-ghost'} btn-asistencia" data-id="${ev.id}" style="margin-bottom:10px;">${yaAsisti ? '✅ Asististe' : 'Marcar que asistí'}</button>
+          <div class="autor">${nombresAsistentes.length ? 'Asistieron: ' + escapeHtml(nombresAsistentes.join(', ')) : 'Nadie ha confirmado asistencia todavía.'}</div>
+        </div>
+      </div>`;
+  }
+
+  async function toggleAsistencia(eventoId) {
+    const ev = eventosCache.find(e => e.id === eventoId);
+    if (!ev) return;
+    const asistentes = new Set(ev.asistentes || []);
+    if (asistentes.has(uid)) asistentes.delete(uid); else asistentes.add(uid);
+    try { await updateDoc(doc(db, COL_EVENTOS, eventoId), { asistentes: Array.from(asistentes) }); }
+    catch (e) { alert('No se pudo actualizar tu asistencia.'); console.error(e); }
+  }
+
+  document.getElementById('btn-nuevo-evento').addEventListener('click', () => {
+    document.getElementById('ev-titulo').value = '';
+    document.getElementById('ev-descripcion').value = '';
+    document.getElementById('ev-fecha').value = '';
+    tipoEventoElegido = TIPOS_EVENTO[0]; pintarChipsTipoEvento();
+    overlay.style.display = 'block';
+    document.getElementById('sheet-evento').style.display = 'block';
+  });
+  document.getElementById('ev-cancelar').addEventListener('click', () => {
+    overlay.style.display = 'none';
+    document.getElementById('sheet-evento').style.display = 'none';
+  });
+  document.getElementById('ev-confirmar').addEventListener('click', async () => {
+    const p = getPerfil();
+    const titulo = document.getElementById('ev-titulo').value.trim();
+    const descripcion = document.getElementById('ev-descripcion').value.trim();
+    const fechaStr = document.getElementById('ev-fecha').value;
+    if (!titulo) { alert('Escribe el título del evento.'); return; }
+    if (!fechaStr) { alert('Elige una fecha.'); return; }
+    try {
+      await addDoc(collection(db, COL_EVENTOS), {
+        clubId: p.clubId, clubNombre: p.clubNombre,
+        titulo, tipo: tipoEventoElegido, descripcion,
+        fecha: new Date(fechaStr + 'T12:00:00').getTime(),
+        asistentes: [],
+        creadoPor: uid, creadoPorNombre: p.nombre,
+        creadoEn: serverTimestamp()
+      });
+      overlay.style.display = 'none';
+      document.getElementById('sheet-evento').style.display = 'none';
+    } catch (e) { alert('No se pudo publicar el evento. Verifica tu permiso de admin/capitán.'); console.error(e); }
+  });
+
+  // ---------- Estadísticas simples de actividad del club ----------
+  function pintarStatsClub() {
+    const el = document.getElementById('stats-club-resumen');
+    if (!el) return;
+    el.textContent = `📅 ${eventosCache.length} eventos · 💪 ${rutinasCache.length} rutinas · 🥏 ${oportunidadesMiClub.length} oportunidades publicadas`;
+  }
+
+  // ---------- Difusor de mensajes por WhatsApp (jugador por jugador) ----------
+  function limpiarTelefono(tel) { return (tel || '').replace(/[^\d]/g, ''); }
+  document.getElementById('wa-generar').addEventListener('click', () => {
+    const mensaje = document.getElementById('wa-mensaje').value.trim();
+    const cont = document.getElementById('wa-lista-miembros');
+    if (!mensaje) { alert('Escribe el mensaje primero.'); return; }
+    const texto = encodeURIComponent(mensaje);
+    cont.innerHTML = miembrosCache.map(m => {
+      const tel = limpiarTelefono(m.telefono);
+      if (!tel) return `<div class="member-row"><div class="mname">${escapeHtml(m.nombre)}</div><div class="ob-sub" style="margin:0;">Sin teléfono registrado</div></div>`;
+      return `<div class="member-row"><div class="mname">${escapeHtml(m.nombre)}</div><a class="btn-link" style="width:auto;" href="https://wa.me/${tel}?text=${texto}" target="_blank" rel="noopener">Abrir WhatsApp →</a></div>`;
+    }).join('');
+  });
+
   // ---------- Navegación inferior ----------
   document.querySelectorAll('#bottomnav button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1133,7 +1395,7 @@ async function iniciarApp() {
     const p = getPerfil();
     if (!p?.clubId) return;
     const qClub = query(collection(db, COL_OPORTUNIDADES), where('clubId', '==', p.clubId));
-    onSnapshot(qClub, snap => { oportunidadesMiClub = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(porFechaDesc); renderFeeds(); }, err => console.error('feed club:', err));
+    onSnapshot(qClub, snap => { oportunidadesMiClub = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(porFechaDesc); renderFeeds(); pintarStatsClub(); }, err => console.error('feed club:', err));
 
     const qRed = query(collection(db, COL_OPORTUNIDADES), where('alcance', '==', 'red'));
     onSnapshot(qRed, snap => { oportunidadesRed = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort(porFechaDesc); renderFeeds(); }, err => console.error('feed red:', err));
