@@ -1,4 +1,4 @@
-# 🥏 RED · Desde La Línea
+# 🥏 REDV · Desde La Línea
 
 **La red social de los clubes de disco volador en Latinoamérica.**
 
@@ -10,7 +10,7 @@ Comunidad de disco volador · LATAM — una app web (PWA) para que los clubes de
 
 ## ¿Qué resuelve?
 
-Los clubes de disco volador en LATAM crecen a punta de voluntad y grupos de WhatsApp. RED le da a cada club una casa digital propia — y los conecta a todos entre sí a través de una red regional — para:
+Los clubes de disco volador en LATAM crecen a punta de voluntad y grupos de WhatsApp. REDV le da a cada club una casa digital propia — y los conecta a todos entre sí a través de una red regional — para:
 
 - Publicar y encontrar oportunidades (becas, cupos, patrocinios, equipo, vacantes, intercambios) dentro de su club **o** en toda la Red LATAM.
 - Administrar miembros, roles y reglas internas sin depender de un grupo de chat.
@@ -98,10 +98,10 @@ Si falta algún campo de configuración de Firebase, la propia app lo detecta y 
 
 ## Sobre Desde La Línea
 
-RED es un proyecto de **Desde La Línea**, plataforma de organización de eventos, transmisión (UltiStats) y herramientas digitales para la comunidad de disco volador en Latinoamérica — con base en Medellín, Colombia.
+REDV es un proyecto de **Desde La Línea**, plataforma de organización de eventos, transmisión (UltiStats) y herramientas digitales para la comunidad de disco volador en Latinoamérica — con base en Medellín, Colombia.
 
 ---
 
 ## Contacto
 
-¿Preguntas, ideas o quieres sumar a tu club a la red? Escríbenos a **desdelalinea@gmail.com**.
+¿Preguntas, ideas o quieres sumar a tu club a la red? Escríbenos a **desdelalinea.tv@gmail.com**.
