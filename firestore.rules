@@ -1,0 +1,154 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Lee la membresía del que hace la petición para un club dado (uid del token, no editable por el cliente)
+    function membershipDoc(clubId) {
+      return get(/databases/$(database)/documents/red_dll_miembros/$(clubId + '_' + request.auth.uid));
+    }
+
+    function isMember(clubId) {
+      return signedIn() && exists(/databases/$(database)/documents/red_dll_miembros/$(clubId + '_' + request.auth.uid));
+    }
+
+    function miRol(clubId) { return membershipDoc(clubId).data.rol; }
+    function miAlcance(clubId) { return membershipDoc(clubId).data.alcance; }
+
+    function isAdmin(clubId) { return isMember(clubId) && miRol(clubId) == 'admin'; }
+    function isAdminOCapitan(clubId) { return isMember(clubId) && (miRol(clubId) == 'admin' || miRol(clubId) == 'capitan'); }
+    function tieneAlcanceRed(clubId) { return isMember(clubId) && (miAlcance(clubId) == 'red' || miRol(clubId) == 'admin' || miRol(clubId) == 'capitan'); }
+
+    function esCreadorDelClub(clubId) {
+      return signedIn() && get(/databases/$(database)/documents/red_dll_clubes/$(clubId)).data.creadoPor == request.auth.uid;
+    }
+
+    // Super-admin de TODA la red (ej. el operador de Desde La Línea), para funciones de monetización.
+    // Se otorga manualmente creando un documento en Firebase Console — nunca desde la app.
+    function esSuperAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/red_dll_superadmins/$(request.auth.uid));
+    }
+
+    // ---------- SUPERADMINS DE LA RED ----------
+    match /red_dll_superadmins/{adminUid} {
+      allow read: if signedIn() && request.auth.uid == adminUid;
+      allow write: if false;
+    }
+
+    // ---------- CLUBES ----------
+    // Lectura pública: se necesita poder buscar clubes por nombre/ciudad para unirse.
+    // OJO: el código de invitación NUNCA vive aquí, vive en red_dll_codigos (no legible).
+    match /red_dll_clubes/{clubId} {
+      allow read: if true;
+      allow create: if signedIn();
+      allow update: if isAdminOCapitan(clubId);
+      allow delete: if false;
+    }
+
+    // ---------- CÓDIGOS DE INVITACIÓN ----------
+    // Solo el admin de ESE club puede leer/regenerar su propio código.
+    // Nadie más puede leerlo directamente (ni siquiera otros miembros del club).
+    match /red_dll_codigos/{clubId} {
+      allow read: if isAdmin(clubId);
+      allow create: if esCreadorDelClub(clubId);
+      allow update: if isAdmin(clubId);
+      allow delete: if false;
+    }
+
+    // ---------- MEMBRESÍAS (rol + alcance por usuario y club) ----------
+    match /red_dll_miembros/{membershipId} {
+      // Solo miembros del mismo club pueden ver la lista de miembros de ese club
+      allow read: if signedIn() && isMember(resource.data.clubId);
+
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid && (
+        // Caso 1: te unes como miembro normal, validando el código de invitación real
+        (request.resource.data.rol == 'miembro' && request.resource.data.alcance == 'club' &&
+          request.resource.data.codigoIngresado ==
+            get(/databases/$(database)/documents/red_dll_codigos/$(request.resource.data.clubId)).data.codigo)
+        ||
+        // Caso 2: eres el creador del club, te auto-asignas admin con alcance de red
+        (request.resource.data.rol == 'admin' && request.resource.data.alcance == 'red' &&
+          esCreadorDelClub(request.resource.data.clubId))
+      );
+
+      // Admin y capitán pueden cambiar el ALCANCE de otros; solo el admin puede cambiar el ROL
+      allow update: if isAdminOCapitan(resource.data.clubId) &&
+        (request.resource.data.rol == resource.data.rol || isAdmin(resource.data.clubId));
+
+      // Solo el admin puede quitar a alguien del club (ej. limpiar una cuenta duplicada) — nunca a otro admin
+      allow delete: if isAdmin(resource.data.clubId) && resource.data.rol != 'admin';
+    }
+
+    // ---------- OPORTUNIDADES (directorio de la red de confianza) ----------
+    match /red_dll_oportunidades/{opId} {
+      // Un post de alcance "red" es visible para cualquier usuario autenticado (aunque sea anónimo).
+      // Un post de alcance "club" solo es visible para miembros verificados de ese club.
+      allow read: if signedIn() && (resource.data.alcance == 'red' || isMember(resource.data.clubId));
+
+      allow create: if signedIn() &&
+        request.resource.data.autorUid == request.auth.uid &&
+        isMember(request.resource.data.clubId) &&
+        request.resource.data.destacado == false &&
+        (request.resource.data.alcance == 'club' || tieneAlcanceRed(request.resource.data.clubId));
+
+      // El autor siempre puede editar/borrar lo suyo; admin/capitán pueden moderar posts de su propio club;
+      // el super-admin de la red puede destacar cualquier publicación (función de monetización).
+      allow update, delete: if signedIn() &&
+        (resource.data.autorUid == request.auth.uid || isAdminOCapitan(resource.data.clubId) || esSuperAdmin());
+    }
+
+    // ---------- RUTINAS DE ENTRENAMIENTO ----------
+    match /red_dll_rutinas/{rutinaId} {
+      allow read: if signedIn() && isMember(resource.data.clubId);
+      allow create: if signedIn() && isAdminOCapitan(request.resource.data.clubId) &&
+        request.resource.data.creadaPor == request.auth.uid;
+      allow update, delete: if isAdminOCapitan(resource.data.clubId);
+    }
+
+    // ---------- ENTREGAS (evidencia de cumplimiento de rutinas) ----------
+    match /red_dll_entregas/{entregaId} {
+      allow read: if signedIn() && isMember(resource.data.clubId);
+      allow create: if signedIn() &&
+        request.resource.data.jugadorUid == request.auth.uid &&
+        isMember(request.resource.data.clubId);
+      // El jugador puede reemplazar su propia entrega mientras esté pendiente o rechazada (reintentar);
+      // el admin/capitán del club puede aprobarla o rechazarla.
+      allow update: if signedIn() && (
+        (resource.data.jugadorUid == request.auth.uid && resource.data.estado in ['pendiente','rechazada']) ||
+        isAdminOCapitan(resource.data.clubId)
+      );
+      allow delete: if false;
+    }
+
+    // ---------- PERFILES (respaldo recuperable: nombre, club, etc. por uid) ----------
+    // Cada persona solo puede leer/escribir su propio perfil — esto es lo que permite
+    // recuperar la cuenta en un dispositivo nuevo tras iniciar sesión con correo/contraseña.
+    match /red_dll_perfiles/{perfilUid} {
+      allow read, write: if signedIn() && request.auth.uid == perfilUid;
+    }
+
+    // ---------- EVENTOS Y TORNEOS DEL CLUB (historial simple) ----------
+    match /red_dll_eventos/{eventoId} {
+      allow read: if signedIn() && isMember(resource.data.clubId);
+      allow create: if signedIn() && isAdminOCapitan(request.resource.data.clubId) &&
+        request.resource.data.creadoPor == request.auth.uid;
+      // Cualquier miembro puede marcar su propia asistencia (actualiza el arreglo "asistentes")
+      allow update: if signedIn() && isMember(resource.data.clubId);
+      allow delete: if isAdminOCapitan(resource.data.clubId);
+    }
+
+    // ---------- PLAYLIST DEL EQUIPO (canciones elegidas por el club, YouTube o Spotify) ----------
+    match /red_dll_playlist/{cancionId} {
+      allow read: if signedIn() && isMember(resource.data.clubId);
+      // Cualquier miembro puede agregar una canción, no solo admin/capitán
+      allow create: if signedIn() && isMember(request.resource.data.clubId) &&
+        request.resource.data.agregadoPor == request.auth.uid;
+      // Quien la agregó puede quitarla; admin/capitán puede moderar cualquiera del club
+      allow update, delete: if signedIn() &&
+        (resource.data.agregadoPor == request.auth.uid || isAdminOCapitan(resource.data.clubId));
+    }
+  }
+}

@@ -1,0 +1,34 @@
+name: Validar antes de mergear
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verificar sintaxis del JS embebido en index.html
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('index.html', 'utf8');
+            const m = html.match(/<script type=\"module\">([\s\S]*)<\/script>/);
+            if (!m) { console.error('No se encontró <script type=\"module\"> en index.html'); process.exit(1); }
+            fs.writeFileSync('/tmp/app.mjs', m[1]);
+          "
+          node --check /tmp/app.mjs
+          echo "JS de index.html: sintaxis OK"
+
+      - name: Validar sintaxis de firestore.rules
+        run: |
+          npm install -g firebase-tools
+          firebase emulators:exec --project=demo-red-dll --only firestore "echo 'firestore.rules: sintaxis OK'"

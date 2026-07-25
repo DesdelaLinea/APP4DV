@@ -203,6 +203,43 @@
   .perfil-row .k{font-size:12px;color:var(--chalk-dim);}
   .perfil-row .v{font-size:14px;font-weight:600;text-align:right;}
 
+  /* ---------- Playlist del equipo ---------- */
+  .source-toggle{display:flex;gap:8px;margin-bottom:14px;}
+  .source-toggle button{flex:1;padding:11px;border-radius:12px;border:1px solid var(--linea);background:var(--field-3);color:var(--chalk-dim);font-weight:700;font-size:13px;}
+  .source-toggle button.active{border-color:var(--confianza);background:var(--confianza-dim);color:var(--confianza);}
+
+  .reproductor-bar{display:none;background:var(--field-2);border:1px solid var(--linea);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;}
+  .reproductor-bar.activo{display:block;}
+  .rp-titulo{font-weight:700;font-size:14px;line-height:1.3;}
+  .rp-artista{font-size:12px;color:var(--chalk-dim);margin-bottom:10px;}
+  .rp-controles{display:flex;gap:8px;margin-top:10px;}
+  .rp-controles button{flex:1;font-size:12.5px;padding:10px 6px;}
+  #spotify-embed-host{border-radius:12px;overflow:hidden;}
+  #spotify-embed-host iframe{display:block;width:100%;border-radius:12px;}
+  #yt-player-host{position:absolute;width:0;height:0;overflow:hidden;}
+
+  .cancion-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--linea);}
+  .cancion-row:last-child{border-bottom:none;}
+  .cancion-row.sonando{background:var(--disco-dim);margin:0 -12px;padding:12px;border-radius:12px;border-bottom:none;}
+  .cancion-info{flex:1;min-width:0;}
+  .cancion-titulo{font-weight:700;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cancion-meta{font-size:11.5px;color:var(--chalk-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px;}
+  .cancion-acciones{display:flex;gap:12px;align-items:center;flex-shrink:0;}
+  .cancion-acciones button{font-family:var(--font-m);font-size:10.5px;background:none;border:none;padding:0;white-space:nowrap;}
+  .btn-play-cancion{color:var(--confianza);}
+  .btn-quitar-cancion{color:var(--danger);}
+  .fuente-tag{font-family:var(--font-m);font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:999px;font-weight:700;flex-shrink:0;}
+
+  .resultado-cancion{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 10px;background:var(--field-3);border:1px solid var(--linea);border-radius:12px;margin-bottom:8px;}
+  .resultado-cancion img{width:38px;height:38px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+  .resultado-cancion .rc-info{flex:1;min-width:0;}
+  .resultado-cancion .rc-titulo{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .resultado-cancion .rc-artista{font-size:11px;color:var(--chalk-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .resultado-cancion button{background:var(--confianza-dim);color:var(--confianza);border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;flex-shrink:0;}
+
+  .spotify-connect-box{background:var(--field-3);border:1px dashed var(--linea);border-radius:12px;padding:14px;text-align:center;margin-bottom:4px;}
+  .spotify-connect-box p{font-size:12px;color:var(--chalk-dim);margin:0 0 10px;line-height:1.5;}
+
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
@@ -360,6 +397,21 @@
       <div id="rutinas-lista"></div>
     </div>
 
+    <div class="view" id="view-playlist">
+      <div class="reproductor-bar" id="reproductor-bar">
+        <div class="rp-titulo" id="rp-titulo-txt">—</div>
+        <div class="rp-artista" id="rp-artista-txt">—</div>
+        <div id="spotify-embed-host"></div>
+        <div class="rp-controles">
+          <button class="btn btn-ghost" id="rp-anterior">⏮ Anterior</button>
+          <button class="btn btn-ghost" id="rp-play-pausa">⏯ Pausa / Play</button>
+          <button class="btn btn-ghost" id="rp-siguiente">Siguiente ⏭</button>
+        </div>
+      </div>
+      <button class="btn btn-ghost" id="btn-agregar-cancion" style="margin-bottom:16px;">+ Agregar canción</button>
+      <div id="playlist-lista"></div>
+    </div>
+
     <div class="view" id="view-perfil">
       <div class="club-profile-card">
         <div class="perfil-row"><div class="k">Nombre</div><div class="v" id="pf-nombre">—</div></div>
@@ -392,6 +444,7 @@
       <button class="active" data-view="directorio"><span class="ic">🥏</span>Directorio</button>
       <button data-view="club"><span class="ic" style="position:relative;">🏟️<span id="badge-club" class="nav-badge"></span></span>Mi club</button>
       <button data-view="rutinas"><span class="ic">💪</span>Rutinas</button>
+      <button data-view="playlist"><span class="ic">🎵</span>Playlist</button>
       <button data-view="perfil"><span class="ic">👤</span>Perfil</button>
     </div>
   </div>
@@ -456,18 +509,52 @@
   <button class="btn-link" id="ev-cancelar" style="width:100%;text-align:center;">Cancelar</button>
 </div>
 
+<div id="sheet-cancion" class="bottom-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Agregar canción</div>
+  <div class="source-toggle">
+    <button class="active" data-fuente="youtube" type="button">▶️ YouTube</button>
+    <button data-fuente="spotify" type="button">🟢 Spotify</button>
+  </div>
+
+  <div id="youtube-buscador">
+    <div class="ob-sub" id="yt-config-aviso" style="display:none;">Falta configurar la API key de YouTube en el código — revisa el README.</div>
+    <div class="field-group"><input class="input" id="yt-buscar" placeholder="Busca una canción o artista…"></div>
+    <div id="yt-resultados"></div>
+  </div>
+
+  <div id="spotify-buscador" style="display:none;">
+    <div class="spotify-connect-box" id="spotify-conectar-box">
+      <p>Conecta la cuenta de Spotify del club para buscar y agregar canciones a la playlist oficial.</p>
+      <button class="btn btn-primary" id="btn-conectar-spotify" type="button" style="width:auto;padding:10px 22px;">Conectar con Spotify</button>
+    </div>
+    <div id="spotify-buscador-form" style="display:none;">
+      <div class="field-group"><input class="input" id="sp-buscar" placeholder="Busca una canción o artista…"></div>
+      <div id="sp-resultados"></div>
+    </div>
+  </div>
+
+  <button class="btn-link" id="cancion-cancelar" style="width:100%;text-align:center;">Cerrar</button>
+</div>
+<div id="yt-player-host"><div id="yt-player"></div></div>
+
 <input type="file" id="input-archivo-entrega" accept="image/*,video/*" style="display:none;">
 <input type="file" id="input-archivo-logo" accept="image/*" style="display:none;">
 
 <script type="module">
 const firebaseConfig = {
-  apiKey: "AIzaSyDlpA7_PUsw5JmbjM9VgoAa0L7WfboTyTM",
-  authDomain: "app4dv.firebaseapp.com",
-  projectId: "app4dv",
-  storageBucket: "app4dv.firebasestorage.app",
-  messagingSenderId: "703581570394",
-  appId: "1:703581570394:web:2dd9a5982841d227ebdf63"
+  apiKey: "PEGA_AQUI_TU_API_KEY",
+  authDomain: "PEGA_AQUI_TU_AUTH_DOMAIN",
+  projectId: "PEGA_AQUI_TU_PROJECT_ID",
+  storageBucket: "PEGA_AQUI_TU_STORAGE_BUCKET",
+  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
+  appId: "PEGA_AQUI_TU_APP_ID"
 };
+
+// Playlist del equipo — opcional. Sin esto, la pestaña "Playlist" sigue mostrando la cola
+// de canciones, pero buscar/conectar YouTube o Spotify no funcionará hasta que las pegues aquí.
+const YOUTUBE_API_KEY = "PEGA_AQUI_TU_YOUTUBE_API_KEY";       // Google Cloud Console → YouTube Data API v3
+const SPOTIFY_CLIENT_ID = "PEGA_AQUI_TU_SPOTIFY_CLIENT_ID";   // developer.spotify.com/dashboard
 
 const CAMPOS_CONFIG = ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
 const CAMPOS_SIN_CONFIGURAR = CAMPOS_CONFIG.filter(k => String(firebaseConfig[k] || '').startsWith('PEGA_AQUI'));
@@ -507,6 +594,7 @@ async function iniciarApp() {
   const COL_RUTINAS = "red_dll_rutinas";
   const COL_ENTREGAS = "red_dll_entregas";
   const COL_EVENTOS = "red_dll_eventos";
+  const COL_PLAYLIST = "red_dll_playlist";
 
   const PAISES = ["Colombia","México","Argentina","Chile","Perú","Ecuador","Venezuela","Uruguay","Paraguay","Bolivia","Brasil","Costa Rica","Panamá","Guatemala","República Dominicana","Otro"];
   const DISCIPLINAS = ["Ultimate","Disc Golf","Freestyle","Guts","Otro"];
@@ -533,6 +621,7 @@ async function iniciarApp() {
     const snapSuper = await getDoc(doc(db, COL_SUPERADMINS, uid));
     soyRedSuperAdmin = snapSuper.exists();
   } catch (e) { soyRedSuperAdmin = false; }
+  await manejarCallbackSpotify();
   document.getElementById('loading-screen').style.display = 'none';
 
   function generarCodigo(len = 6) {
@@ -761,16 +850,8 @@ async function iniciarApp() {
       });
       finalizarOnboarding(clubParaUnirse.id, clubParaUnirse.nombre);
     } catch (e) {
-      console.error('unirse con código:', e);
-      if (e.code === 'permission-denied') {
-        alert('El código no coincide con el de "' + clubParaUnirse.nombre + '". Revisa mayúsculas, espacios, o pide el código actual a tu admin (puede haberlo regenerado).');
-      } else if (e.code === 'not-found') {
-        alert('No encontramos ese club — puede que ya no exista.');
-      } else if (e.code === 'unavailable') {
-        alert('Parece que no hay conexión a internet. Intenta de nuevo.');
-      } else {
-        alert('No se pudo unir al club. Código de error: ' + (e.code || 'desconocido') + '. Cuéntale esto a soporte si se repite.');
-      }
+      alert('Código incorrecto. Pide el código correcto a tu club.');
+      console.error(e);
     }
   });
 
@@ -864,6 +945,7 @@ async function iniciarApp() {
     suscribirRutinas();
     suscribirEntregas();
     suscribirEventos();
+    suscribirPlaylist();
     manejarLinkDirecto();
   }
 
@@ -1461,8 +1543,353 @@ async function iniciarApp() {
   function pintarStatsClub() {
     const el = document.getElementById('stats-club-resumen');
     if (!el) return;
-    el.textContent = `📅 ${eventosCache.length} eventos · 💪 ${rutinasCache.length} rutinas · 🥏 ${oportunidadesMiClub.length} oportunidades publicadas`;
+    el.textContent = `📅 ${eventosCache.length} eventos · 💪 ${rutinasCache.length} rutinas · 🎵 ${playlistCache.length} canciones · 🥏 ${oportunidadesMiClub.length} oportunidades publicadas`;
   }
+
+  // ==================== PLAYLIST DEL EQUIPO (YouTube + Spotify) ====================
+
+  function youtubeConfigurado() { return YOUTUBE_API_KEY && !YOUTUBE_API_KEY.startsWith('PEGA_AQUI'); }
+  function spotifyConfigurado() { return SPOTIFY_CLIENT_ID && !SPOTIFY_CLIENT_ID.startsWith('PEGA_AQUI'); }
+  const FUENTE_INFO = {
+    youtube: { txt: 'YouTube', bg: 'var(--disco-dim)', fg: 'var(--disco)' },
+    spotify: { txt: 'Spotify', bg: 'var(--confianza-dim)', fg: 'var(--confianza)' }
+  };
+
+  // ---------- Datos: agregar / quitar canciones ----------
+  let playlistCache = [];
+  function suscribirPlaylist() {
+    const p = getPerfil();
+    if (!p?.clubId) return;
+    const q = query(collection(db, COL_PLAYLIST), where('clubId', '==', p.clubId));
+    onSnapshot(q, snap => {
+      playlistCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => {
+        const ta = a.agregadoEn?.toMillis ? a.agregadoEn.toMillis() : 0;
+        const tb = b.agregadoEn?.toMillis ? b.agregadoEn.toMillis() : 0;
+        return ta - tb; // orden de llegada: la primera que se agregó, primera en la cola
+      });
+      pintarPlaylist();
+      pintarStatsClub();
+    }, err => console.error('playlist:', err));
+  }
+
+  async function agregarCancionAFirestore(fuente, refId, titulo, artista) {
+    const p = getPerfil();
+    try {
+      await addDoc(collection(db, COL_PLAYLIST), {
+        clubId: p.clubId, clubNombre: p.clubNombre,
+        fuente, refId, titulo, artista,
+        agregadoPor: uid, agregadoPorNombre: p.nombre,
+        agregadoEn: serverTimestamp()
+      });
+    } catch (e) { alert('No se pudo agregar la canción a la playlist.'); console.error(e); }
+  }
+
+  async function quitarCancion(cancionId) {
+    if (!confirm('¿Quitar esta canción de la playlist del equipo?')) return;
+    try { await deleteDoc(doc(db, COL_PLAYLIST, cancionId)); }
+    catch (e) { alert('No se pudo quitar la canción.'); console.error(e); }
+  }
+
+  // ---------- Pintar la cola ----------
+  function pintarPlaylist() {
+    const cont = document.getElementById('playlist-lista');
+    if (!cont) return;
+    if (!playlistCache.length) {
+      cont.innerHTML = `<div class="empty-state"><div class="emoji">🎵</div><p>Tu club todavía no ha elegido ninguna canción.<br>Agrega la primera para armar la playlist del equipo.</p></div>`;
+      return;
+    }
+    cont.innerHTML = playlistCache.map(c => filaCancion(c)).join('');
+    cont.querySelectorAll('.btn-play-cancion').forEach(b => b.addEventListener('click', () => {
+      const c = playlistCache.find(x => x.id === b.dataset.id);
+      if (c) reproducirCancion(c);
+    }));
+    cont.querySelectorAll('.btn-quitar-cancion').forEach(b => b.addEventListener('click', () => quitarCancion(b.dataset.id)));
+  }
+
+  function filaCancion(c) {
+    const f = FUENTE_INFO[c.fuente] || FUENTE_INFO.youtube;
+    const sonando = pistaActual && pistaActual.id === c.id;
+    const puedeQuitar = c.agregadoPor === uid || soyAdminOCapitan();
+    return `
+      <div class="cancion-row${sonando ? ' sonando' : ''}">
+        <div class="cancion-info">
+          <div class="cancion-titulo">${escapeHtml(c.titulo)}</div>
+          <div class="cancion-meta"><span class="fuente-tag" style="background:${f.bg};color:${f.fg};">${f.txt}</span>${escapeHtml(c.artista)} · agregada por ${escapeHtml(c.agregadoPorNombre)}</div>
+        </div>
+        <div class="cancion-acciones">
+          <button class="btn-play-cancion" data-id="${c.id}" type="button">${sonando ? '▶ Sonando' : 'Reproducir'}</button>
+          ${puedeQuitar ? `<button class="btn-quitar-cancion" data-id="${c.id}" type="button">Quitar</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  // ---------- Reproductor: YouTube (IFrame Player API) + Spotify (Embed) ----------
+  let pistaActual = null;
+  let ytPlayer = null, ytPlayerListo = false;
+
+  (function cargarYoutubeIframeApi() {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  })();
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player('yt-player', {
+      height: '0', width: '0',
+      events: {
+        onReady: () => { ytPlayerListo = true; },
+        onStateChange: (e) => { if (e.data === YT.PlayerState.ENDED) siguienteCancion(); }
+      }
+    });
+  };
+
+  function reproducirCancion(c) {
+    pistaActual = c;
+    document.getElementById('reproductor-bar').classList.add('activo');
+    document.getElementById('rp-titulo-txt').textContent = c.titulo;
+    document.getElementById('rp-artista-txt').textContent = c.artista;
+    const embedHost = document.getElementById('spotify-embed-host');
+
+    if (c.fuente === 'youtube') {
+      embedHost.innerHTML = '';
+      if (!ytPlayerListo) { setTimeout(() => reproducirCancion(c), 400); return; }
+      ytPlayer.loadVideoById(c.refId);
+      ytPlayer.playVideo();
+    } else {
+      if (ytPlayerListo) ytPlayer.stopVideo();
+      embedHost.innerHTML = `<iframe src="https://open.spotify.com/embed/track/${c.refId}?utm_source=generator&autoplay=1" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+    }
+    pintarPlaylist();
+  }
+
+  function siguienteCancion() {
+    if (!playlistCache.length) return;
+    const i = pistaActual ? playlistCache.findIndex(x => x.id === pistaActual.id) : -1;
+    reproducirCancion(playlistCache[(i + 1) % playlistCache.length]);
+  }
+  function anteriorCancion() {
+    if (!playlistCache.length) return;
+    const i = pistaActual ? playlistCache.findIndex(x => x.id === pistaActual.id) : 0;
+    reproducirCancion(playlistCache[(i - 1 + playlistCache.length) % playlistCache.length]);
+  }
+  document.getElementById('rp-siguiente').addEventListener('click', siguienteCancion);
+  document.getElementById('rp-anterior').addEventListener('click', anteriorCancion);
+  document.getElementById('rp-play-pausa').addEventListener('click', () => {
+    // El reproductor embebido de Spotify trae sus propios controles; este botón solo maneja YouTube.
+    if (!pistaActual || pistaActual.fuente !== 'youtube' || !ytPlayerListo) return;
+    if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+    else ytPlayer.playVideo();
+  });
+
+  // ---------- Búsqueda: YouTube Data API ----------
+  async function buscarYoutube(texto) {
+    if (!youtubeConfigurado()) return [];
+    try {
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults=8&q=${encodeURIComponent(texto)}&key=${YOUTUBE_API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.error) { console.error('youtube:', data.error); return []; }
+      return (data.items || []).map(it => ({
+        id: it.id.videoId, titulo: it.snippet.title, artista: it.snippet.channelTitle,
+        imagen: it.snippet.thumbnails?.default?.url || ''
+      }));
+    } catch (e) { console.error('buscar youtube:', e); return []; }
+  }
+
+  // ---------- Spotify: login sin backend (Authorization Code + PKCE) ----------
+  const SPOTIFY_REDIRECT_URI = location.origin + location.pathname;
+  const SPOTIFY_SCOPES = 'playlist-modify-public playlist-modify-private playlist-read-collaborative';
+
+  function base64UrlEncode(bytes) {
+    return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  async function generarPKCE() {
+    const verifier = base64UrlEncode(crypto.getRandomValues(new Uint8Array(64)));
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+    return { verifier, challenge: base64UrlEncode(new Uint8Array(digest)) };
+  }
+  async function conectarSpotify() {
+    if (!spotifyConfigurado()) return;
+    const { verifier, challenge } = await generarPKCE();
+    sessionStorage.setItem('spotify_verifier', verifier);
+    const params = new URLSearchParams({
+      client_id: SPOTIFY_CLIENT_ID, response_type: 'code', redirect_uri: SPOTIFY_REDIRECT_URI,
+      scope: SPOTIFY_SCOPES, code_challenge_method: 'S256', code_challenge: challenge
+    });
+    location.href = `https://accounts.spotify.com/authorize?${params}`;
+  }
+  async function manejarCallbackSpotify() {
+    const params = new URLSearchParams(location.search);
+    const code = params.get('code');
+    if (!code) return;
+    const verifier = sessionStorage.getItem('spotify_verifier');
+    try {
+      const res = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: SPOTIFY_CLIENT_ID, grant_type: 'authorization_code',
+          code, redirect_uri: SPOTIFY_REDIRECT_URI, code_verifier: verifier
+        })
+      });
+      const data = await res.json();
+      if (data.access_token) {
+        localStorage.setItem('spotify_token', JSON.stringify({
+          access_token: data.access_token, expira: Date.now() + (data.expires_in * 1000)
+        }));
+      }
+    } catch (e) { console.error('spotify token:', e); }
+    history.replaceState({}, '', SPOTIFY_REDIRECT_URI); // limpia el ?code=... de la URL
+  }
+  function tokenSpotifyValido() {
+    const raw = localStorage.getItem('spotify_token');
+    if (!raw) return null;
+    const t = JSON.parse(raw);
+    return (t.expira > Date.now()) ? t : null;
+  }
+
+  // Crea la playlist oficial del club en Spotify la primera vez (solo admin/capitán), y guarda su ID.
+  async function asegurarPlaylistSpotify() {
+    const token = tokenSpotifyValido();
+    if (!token) return null;
+    if (miClubActual?.spotifyPlaylistId) return miClubActual.spotifyPlaylistId;
+    if (!soyAdminOCapitan()) { alert('Pídele a tu admin o capitán que conecte Spotify primero para crear la playlist del club.'); return null; }
+    const p = getPerfil();
+    try {
+      const meRes = await fetch('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${token.access_token}` } });
+      const me = await meRes.json();
+      const plRes = await fetch(`https://api.spotify.com/v1/users/${me.id}/playlists`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token.access_token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${p.clubNombre} · Red DLL`,
+          description: 'Playlist del equipo, armada desde RED · Desde La Línea.',
+          public: true
+        })
+      });
+      const pl = await plRes.json();
+      if (pl.id) {
+        await updateDoc(doc(db, COL_CLUBES, p.clubId), { spotifyPlaylistId: pl.id, spotifyPlaylistUrl: pl.external_urls?.spotify || null });
+        return pl.id;
+      }
+    } catch (e) { console.error('crear playlist spotify:', e); }
+    alert('No se pudo crear la playlist en Spotify. Intenta de nuevo.');
+    return null;
+  }
+
+  async function buscarSpotify(texto) {
+    const token = tokenSpotifyValido();
+    if (!token) return [];
+    try {
+      const res = await fetch(`https://api.spotify.com/v1/search?type=track&limit=8&q=${encodeURIComponent(texto)}`, {
+        headers: { Authorization: `Bearer ${token.access_token}` }
+      });
+      const data = await res.json();
+      return (data.tracks?.items || []).map(t => ({
+        id: t.id, titulo: t.name, artista: (t.artists || []).map(a => a.name).join(', '),
+        imagen: t.album?.images?.[2]?.url || t.album?.images?.[0]?.url || ''
+      }));
+    } catch (e) { console.error('buscar spotify:', e); return []; }
+  }
+
+  async function agregarASpotifyPlaylist(trackId) {
+    const token = tokenSpotifyValido();
+    const playlistId = await asegurarPlaylistSpotify();
+    if (!token || !playlistId) return false;
+    try {
+      await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token.access_token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uris: [`spotify:track:${trackId}`] })
+      });
+      return true;
+    } catch (e) { console.error('agregar a spotify:', e); alert('No se pudo agregar la canción a la playlist de Spotify.'); return false; }
+  }
+
+  // ---------- Sheet: agregar canción (toggle de fuente + búsqueda) ----------
+  document.querySelectorAll('#sheet-cancion .source-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#sheet-cancion .source-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const esSpotify = btn.dataset.fuente === 'spotify';
+      document.getElementById('youtube-buscador').style.display = esSpotify ? 'none' : 'block';
+      document.getElementById('spotify-buscador').style.display = esSpotify ? 'block' : 'none';
+      if (esSpotify) actualizarEstadoConexionSpotify();
+    });
+  });
+
+  function actualizarEstadoConexionSpotify() {
+    const caja = document.getElementById('spotify-conectar-box');
+    const form = document.getElementById('spotify-buscador-form');
+    if (!spotifyConfigurado()) {
+      caja.querySelector('p').textContent = 'Falta configurar el Client ID de Spotify en el código — revisa el README.';
+      document.getElementById('btn-conectar-spotify').disabled = true;
+      caja.style.display = 'block'; form.style.display = 'none';
+      return;
+    }
+    const conectado = !!tokenSpotifyValido();
+    caja.style.display = conectado ? 'none' : 'block';
+    form.style.display = conectado ? 'block' : 'none';
+  }
+  document.getElementById('btn-conectar-spotify').addEventListener('click', conectarSpotify);
+
+  document.getElementById('btn-agregar-cancion').addEventListener('click', () => {
+    document.getElementById('yt-buscar').value = ''; document.getElementById('yt-resultados').innerHTML = '';
+    document.getElementById('sp-buscar').value = ''; document.getElementById('sp-resultados').innerHTML = '';
+    document.getElementById('yt-config-aviso').style.display = youtubeConfigurado() ? 'none' : 'block';
+    actualizarEstadoConexionSpotify();
+    overlay.style.display = 'block';
+    document.getElementById('sheet-cancion').style.display = 'block';
+  });
+  document.getElementById('cancion-cancelar').addEventListener('click', () => {
+    overlay.style.display = 'none';
+    document.getElementById('sheet-cancion').style.display = 'none';
+  });
+
+  function pintarResultadosBusqueda(contId, items, fuente) {
+    const cont = document.getElementById(contId);
+    if (!items.length) { cont.innerHTML = '<div class="ob-sub">Sin resultados.</div>'; return; }
+    cont.innerHTML = items.map((it, idx) => `
+      <div class="resultado-cancion">
+        ${it.imagen ? `<img src="${it.imagen}" alt="">` : ''}
+        <div class="rc-info"><div class="rc-titulo">${escapeHtml(it.titulo)}</div><div class="rc-artista">${escapeHtml(it.artista)}</div></div>
+        <button type="button" data-idx="${idx}">Agregar</button>
+      </div>`).join('');
+    cont.querySelectorAll('button[data-idx]').forEach(b => {
+      b.addEventListener('click', () => elegirResultadoBusqueda(items[Number(b.dataset.idx)], fuente));
+    });
+  }
+
+  async function elegirResultadoBusqueda(item, fuente) {
+    if (fuente === 'spotify') {
+      const ok = await agregarASpotifyPlaylist(item.id);
+      if (!ok) return;
+    }
+    await agregarCancionAFirestore(fuente, item.id, item.titulo, item.artista);
+    overlay.style.display = 'none';
+    document.getElementById('sheet-cancion').style.display = 'none';
+  }
+
+  let ytBuscarTimeout;
+  document.getElementById('yt-buscar').addEventListener('input', (e) => {
+    clearTimeout(ytBuscarTimeout);
+    const texto = e.target.value.trim();
+    if (!texto) { document.getElementById('yt-resultados').innerHTML = ''; return; }
+    ytBuscarTimeout = setTimeout(async () => {
+      pintarResultadosBusqueda('yt-resultados', await buscarYoutube(texto), 'youtube');
+    }, 450);
+  });
+
+  let spBuscarTimeout;
+  document.getElementById('sp-buscar').addEventListener('input', (e) => {
+    clearTimeout(spBuscarTimeout);
+    const texto = e.target.value.trim();
+    if (!texto) { document.getElementById('sp-resultados').innerHTML = ''; return; }
+    spBuscarTimeout = setTimeout(async () => {
+      pintarResultadosBusqueda('sp-resultados', await buscarSpotify(texto), 'spotify');
+    }, 450);
+  });
+
+  // ==================== FIN PLAYLIST DEL EQUIPO ====================
 
   // ---------- Difusor de mensajes por WhatsApp (jugador por jugador) ----------
   function limpiarTelefono(tel) { return (tel || '').replace(/[^\d]/g, ''); }
@@ -1631,6 +2058,8 @@ async function iniciarApp() {
   overlay.addEventListener('click', () => {
     cerrarSheet();
     sheetRutina.style.display = 'none';
+    document.getElementById('sheet-evento').style.display = 'none';
+    document.getElementById('sheet-cancion').style.display = 'none';
     overlay.style.display = 'none';
   });
 
@@ -1710,13 +2139,6 @@ async function iniciarApp() {
   });
 
   document.getElementById('btn-cambiar-club').addEventListener('click', () => {
-    const p = getPerfil();
-    if (p) {
-      document.getElementById('ob-nombre').value = p.nombre || '';
-      document.getElementById('ob-pais').value = p.pais || '';
-      document.getElementById('ob-ciudad').value = p.ciudad || '';
-      document.getElementById('ob-telefono').value = p.telefono || '';
-    }
     document.getElementById('app').style.display = 'none';
     document.getElementById('onboarding').style.display = 'block';
     document.getElementById('ob-step-1').classList.remove('active');
